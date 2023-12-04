@@ -1,0 +1,2501 @@
+openapi: 3.0.1
+info:
+  title: XingChen 开放接口定义
+  version: v1
+servers:
+- url: /
+security:
+- Authorization:
+  - x-fag-servicename
+paths:
+  /v1/api/character/update:
+    put:
+      description: 必须字段：characterId。返回成功或失败。
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            example:
+              characterId: xxx
+              version: 1
+              name: 满腔忠义的关云长
+              avatar:
+                fileSavePath: oss-6400001-IAkXjMiqkajy9MCSywI4LD5K.pdf
+                filename: 关云长.pdf
+              introduction: 角色简介
+              basicInformation: 我们来玩一个角色扮演的游戏， 你是「满腔忠义的关云长」。
+              openingLine: 我是「关云长」，很高心与你玩游戏
+              traits: 请在对话时尽可能的展现你的性格、感情， 用文言文回答， 并使用古人的语气和用词。
+              chatExample: |-
+                {{user}}:敢问阁下尊姓大名。
+                {{char}}:吾姓关名羽，字长生，后改云长，河东解良人也。
+              type: virtual
+              chatObjective: 我要关羽拜把子
+              permConfig:
+                isPublic: 0
+                allowApi: 0
+                allowChat: 0
+              advancedConfig:
+                repositoryInfo:
+                  repositoryFiles:
+                  - fileSavePath: oss-6400001-IAkXjMiqkajy9MCSywI4LD5K.pdf
+                    filename: 关云长.pdf
+                isRealInfo: true
+                realInfo: 关云长
+                allowSendImage: true
+                imageStyle: 三国演义人物着装
+                allowSendAsr: false
+                asrStyle: 关云长扮演者声音
+            schema:
+              $ref: '#/components/schemas/CharacterUpdateDTO'
+        description: 待更新的角色信息
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOBoolean'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 更新角色信息
+      tags:
+      - character-api
+  /v1/api/character/createOrUpdateVersion:
+    put:
+      description: 必须字段：characterId 和 version。返回角色版本详情。
+      operationId: createOrUpdateVersion
+      requestBody:
+        content:
+          application/json:
+            example:
+              characterId: xxxxxxx
+              version: 1
+              name: 满腔忠义的关云长
+              avatar:
+                fileSavePath: oss-6400001-IAkXjMiqkajy9MCSywI4LD5K.png
+              introduction: 角色简介
+              basicInformation: 我们来玩一个角色扮演的游戏， 你是「满腔忠义的关云长」。
+              openingLine: 我是「关云长」，很高心与你玩游戏
+              traits: 请在对话时尽可能的展现你的性格、感情， 用文言文回答， 并使用古人的语气和用词。
+              chatExample: |-
+                {{user}}:敢问阁下尊姓大名。
+                {{char}}:吾姓关名羽，字长生，后改云长，河东解良人也。
+              type: virtual
+              chatObjectives: 我要和关云长拜把子
+              advancedConfig:
+                repositoryInfo:
+                  repositoryFiles:
+                  - fileSavePath: oss-6400001-IAkXjMiqkajy9MCSywI4LD5K.pdf
+                isRealInfo: false
+                realInfo: ""
+                allowSendImage: false
+                imageStyle: ""
+                allowSendAsr: false
+                asrStyle: ""
+            schema:
+              $ref: '#/components/schemas/CharacterVersionCreateOrUpdateDTO'
+        description: 待更新的角色信息
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOCharacterDTO'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 创建或更新角色版本
+      tags:
+      - character-api
+  /v1/api/chat/send:
+    post:
+      description: |2
+         发起角色对话：
+      operationId: chat
+      requestBody:
+        content:
+          application/json:
+            example:
+              botProfile:
+                characterId: 6773473721dc4bcdbbbc5cdb7cd37b9b
+                version: 1
+              advancedSettings:
+                enableWebSearch: true
+                enableCharacterKbSearch: true
+                enableLongTermMemory: true
+                enableDebug: false
+              modelParameters:
+                modelName: ""
+                topP: 0.8
+                topK: 100
+                seed: 1234
+              userProfile:
+                userId: "123456789"
+                userName: 云账号名称
+                basicInfo: ""
+              scenario:
+                description: 我是赵云，想拜关云长为二哥
+              messages:
+              - role: user
+                name: 小明
+                content: 你有几个兄弟
+            schema:
+              $ref: '#/components/schemas/ChatReqParams'
+        description: 对话请求
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+            text/event-stream:
+              schema:
+                type: object
+          description: OK
+      security:
+      - Authorization: []
+      summary: 用户对话
+      tags:
+      - chat-api
+  /v1/api/chat/reminder:
+    post:
+      operationId: sysReminder
+      requestBody:
+        content:
+          application/json:
+            example:
+              characterId: f60997700ddc48c89ba136052a57c8ab
+              bizUserId: xyz
+              content: 最近为什么不理我啊？
+            schema:
+              $ref: '#/components/schemas/SysReminderRequest'
+        description: 对话请求
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOBoolean'
+          description: OK
+      tags:
+      - chat-message-api
+  /v1/api/chat/rating:
+    post:
+      description: |2
+         评分请求参数：
+        - 消息ID：必传
+        - 评分：必传，整型，[0-5]
+      operationId: rateMessage
+      requestBody:
+        content:
+          application/json:
+            example:
+              messageId: xxx
+              rating: 4
+            schema:
+              $ref: '#/components/schemas/MessageRatingRequest'
+        description: 对话请求
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOBoolean'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 消息评分
+      tags:
+      - chat-message-api
+  /v1/api/chat/message/histories:
+    post:
+      description: |2
+         当前用户与角色的对话历史查询：
+        - where: 查询条件：必传
+         - characterId: 必传
+         - startTime：开始时间戳，选传
+         - endTime: 结束时间戳，选传
+         - sessionId: 会话ID，宣传
+        - 排序：必传，默认根据创建时间倒排
+        - pageSize: 分页大小，选传，默认10
+        - pageNumber: 分页页码，宣传，默认1
+      operationId: chatHistories
+      requestBody:
+        content:
+          application/json:
+            example:
+              where:
+                characterId: xxx
+                bizUserId: "123456789"
+                startTime: 1689783510026
+              pageSize: 20
+              orderBy:
+              - gmtCreate desc
+            schema:
+              $ref: '#/components/schemas/ChatHistoryQueryDTO'
+        description: 对话请求
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOPageResultChatMessageDTO'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 对话历史
+      tags:
+      - chat-message-api
+  /v1/api/character/search:
+    post:
+      description: |
+        查询角色：
+        - 可以指定的查询字段，and 关系：
+           - 角色名称：左匹配
+           - 查询范围
+             - my - 只查询我创建的角色
+             - public - 查询平台开放的角色
+             - pre_configured - 预制角色
+        - 可以指定一定的排序规则，如更新时间倒排。
+        - 搜索结果为 角色详情。
+        - 支持分页。
+      operationId: search
+      requestBody:
+        content:
+          application/json:
+            example:
+              where:
+                characterName: 满腔忠义的关云长
+                scope: my
+              orderBy:
+              - gmtModified desc
+              pageNum: 1
+              pageSize: 10
+            schema:
+              $ref: '#/components/schemas/CharacterQueryDTO'
+        description: 查询条件
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOPageResultCharacterDTO'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 查询角色
+      tags:
+      - character-api
+  /v1/api/character/create:
+    post:
+      description: 基于角色名称、人设和对话示例定义角色，并返回角色ID
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: 满腔忠义的关云长
+              avatar:
+                fileUrl: https://ai-character.oss-cn-hangzhou.aliyuncs.com/img/guanyu.jpg
+                filename: 关云长.png
+              introduction: 满腔忠义的关云长
+              basicInformation: 我们来玩一个角色扮演的游戏， 你是「满腔忠义的关云长」。
+              openingLine: 我是「关云长」，很高心与你玩游戏
+              traits: 请在对话时尽可能的展现你的性格、感情， 用文言文回答， 并使用古人的语气和用词。
+              chatExample: |-
+                {{user}}:敢问阁下尊姓大名。
+                {{char}}:吾姓关名羽，字长生，后改云长，河东解良人也。
+              type: virtual
+              chatObjective: 我要关羽拜把子
+              permConfig:
+                isPublic: 0
+                allowApi: 0
+                allowChat: 0
+              advancedConfig:
+                repositoryInfo:
+                  repositoryFiles:
+                  - fileSavePath: oss-1cc13d07d7f24e508efd5787d5dfe8d1-M5MzQ2VJSIIow5VmTXyTNuIZ.docx
+                    filename: 关云长.docx
+                isRealInfo: true
+                realInfo: 关云长
+                allowSendImage: true
+                imageStyle: 三国演义人物着装
+                allowSendAsr: false
+                asrStyle: 关云长扮演者声音
+            schema:
+              $ref: '#/components/schemas/CharacterCreateDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOCharacterKey'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 创建角色
+      tags:
+      - character-api
+  /v1/api/character/versions/{characterId}:
+    get:
+      description: 获取角色版本列表
+      operationId: listCharacterVersions
+      parameters:
+      - description: 角色 characterId
+        explode: false
+        in: path
+        name: characterId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOListCharacterDTO'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 角色版本列表
+      tags:
+      - character-api
+  /v1/api/character/newversion/recommend/{characterId}:
+    get:
+      description: 获取角色版本列表
+      operationId: recommendCharacterVersion
+      parameters:
+      - description: 角色 characterId
+        explode: false
+        in: path
+        name: characterId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOCharacterDTO'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 角色版本列表
+      tags:
+      - character-api
+  /v1/api/character/details:
+    get:
+      description: 获取角色详细信息
+      operationId: characterDetails
+      parameters:
+      - description: 角色ID
+        explode: true
+        in: query
+        name: characterId
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 角色版本
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOCharacterDTO'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 角色详情
+      tags:
+      - character-api
+  /v1/api/character/delete:
+    delete:
+      description: （逻辑）删除 character。返回成功或失败。
+      operationId: delete
+      parameters:
+      - description: 待删除的 characterId
+        explode: true
+        in: query
+        name: characterId
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 待删除的版本
+        explode: true
+        in: query
+        name: version
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDTOBoolean'
+          description: OK
+      security:
+      - Authorization: []
+      summary: 删除角色
+      tags:
+      - character-api
+components:
+  schemas:
+    CharacterAdvancedConfig:
+      description: 角色高级配置
+      example:
+        chatDescription: chatDescription
+        modelConfig:
+          minLength: 6
+          temperature: 5.962133916683182
+          topP: 1.4658129805029452
+          maxLength: 0
+        allowSendImage: true
+        allowSendAsr: true
+        isRealInfo: true
+        searchKeyword: searchKeyword
+        repositoryInfo:
+          repositoryFiles:
+          - fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+            status: status
+          - fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+            status: status
+          status: status
+        imageStyle: imageStyle
+        asrStyle: asrStyle
+      properties:
+        modelConfig:
+          $ref: '#/components/schemas/ModelConfig'
+        repositoryInfo:
+          $ref: '#/components/schemas/RepositoryInfo'
+        isRealInfo:
+          description: 是否返回真实世界信息
+          type: boolean
+        searchKeyword:
+          description: web搜索必填关键字
+          type: string
+        allowSendImage:
+          description: 是否允许角色发送图片
+          type: boolean
+        imageStyle:
+          description: 角色发送图片的风格
+          type: string
+        allowSendAsr:
+          description: 是否允许角色发送语音
+          type: boolean
+        asrStyle:
+          description: 角色发送语音风格
+          type: string
+        chatDescription:
+          description: 对话介绍
+          type: string
+      type: object
+    CharacterPermissionConfig:
+      description: 角色权限配置
+      example:
+        allowApi: 9
+        allowChat: 7
+        isPublic: 2
+      properties:
+        isPublic:
+          description: 是否可查看角色属性(0:不公开;1:公开)
+          format: int32
+          type: integer
+        allowChat:
+          description: "允许在平台和其他用户聊天(0:不允许,1:允许)"
+          format: int32
+          type: integer
+        allowApi:
+          description: "允许其他用户通过api调用(0:不允许,1:允许)"
+          format: int32
+          type: integer
+      required:
+      - allowApi
+      - allowChat
+      - isPublic
+      type: object
+    CharacterUpdateDTO:
+      description: 角色更新对象
+      example:
+        permConfig:
+          allowApi: 9
+          allowChat: 7
+          isPublic: 2
+        traits: traits
+        chatExample: chatExample
+        avatar:
+          fileSavePath: fileSavePath
+          filename: filename
+          fileUrl: fileUrl
+        type: type
+        version: 5
+        chatObjective: chatObjective
+        basicInformation: basicInformation
+        openingLine: openingLine
+        advancedConfig:
+          chatDescription: chatDescription
+          modelConfig:
+            minLength: 6
+            temperature: 5.962133916683182
+            topP: 1.4658129805029452
+            maxLength: 0
+          allowSendImage: true
+          allowSendAsr: true
+          isRealInfo: true
+          searchKeyword: searchKeyword
+          repositoryInfo:
+            repositoryFiles:
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            status: status
+          imageStyle: imageStyle
+          asrStyle: asrStyle
+        name: name
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        characterId: characterId
+        introduction: introduction
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        name:
+          description: 角色名称(最多20个字符)
+          maxLength: 20
+          minLength: 1
+          type: string
+        avatar:
+          $ref: '#/components/schemas/FileInfoVO'
+        introduction:
+          description: 角色描述
+          maxLength: 30
+          minLength: 1
+          type: string
+        basicInformation:
+          description: 基本信息
+          type: string
+        openingLine:
+          description: 开场白
+          type: string
+        traits:
+          description: 角色特点
+          type: string
+        chatExample:
+          description: 聊天示例
+          type: string
+        type:
+          description: 角色类型，virtual:虚拟角色，reproduction:已知角色复刻
+          type: string
+        chatObjective:
+          description: 对话目标
+          type: string
+        advancedConfig:
+          $ref: '#/components/schemas/CharacterAdvancedConfig'
+        characterId:
+          description: 角色ID
+          type: string
+        version:
+          description: 角色版本
+          format: int32
+          type: integer
+        permConfig:
+          $ref: '#/components/schemas/CharacterPermissionConfig'
+      required:
+      - basicInformation
+      - characterId
+      - introduction
+      - name
+      - openingLine
+      - version
+      type: object
+    FileInfoVO:
+      description: 角色头像
+      example:
+        fileSavePath: fileSavePath
+        filename: filename
+        fileUrl: fileUrl
+      properties:
+        fileSavePath:
+          type: string
+        filename:
+          type: string
+        fileUrl:
+          type: string
+      type: object
+    GatewayContext:
+      example:
+        serviceType: serviceType
+        flowJsonPath: flowJsonPath
+        fcUrl: fcUrl
+      properties:
+        serviceType:
+          type: string
+        fcUrl:
+          type: string
+        flowJsonPath:
+          type: string
+      type: object
+    GatewayIssuedParams:
+      example:
+        userInfo:
+          key: userInfo
+        context:
+          serviceType: serviceType
+          flowJsonPath: flowJsonPath
+          fcUrl: fcUrl
+      properties:
+        userInfo:
+          additionalProperties:
+            type: string
+          type: object
+        context:
+          $ref: '#/components/schemas/GatewayContext'
+      type: object
+    ModelConfig:
+      description: 角色模型配置
+      example:
+        minLength: 6
+        temperature: 5.962133916683182
+        topP: 1.4658129805029452
+        maxLength: 0
+      properties:
+        maxLength:
+          description: 角色说话的最长字数
+          format: int32
+          type: integer
+        minLength:
+          description: 角色说话的最长字数
+          format: int32
+          type: integer
+        topP:
+          description: 可选，默认切在“默认”选项，选择“其他”时可以自行填入数字（提示最大为1？）；默认（背后参数为0.8）
+          format: double
+          type: number
+        temperature:
+          description: 可选，默认切在“默认”选项，共4个选项（默认、风格稳定、自由发散、其他），选择“其他”时可以自行填入数字（提示最大为xx）；默认（背后参数为1），风格稳定（背后参数为0.92），自由发散（背后参数为1.02）
+          format: double
+          type: number
+      type: object
+    Repository:
+      description: 知识库文件信息
+      example:
+        fileSavePath: fileSavePath
+        filename: filename
+        fileUrl: fileUrl
+        status: status
+      properties:
+        fileSavePath:
+          type: string
+        filename:
+          type: string
+        fileUrl:
+          type: string
+        status:
+          type: string
+      type: object
+    RepositoryInfo:
+      description: 知识库信息
+      example:
+        repositoryFiles:
+        - fileSavePath: fileSavePath
+          filename: filename
+          fileUrl: fileUrl
+          status: status
+        - fileSavePath: fileSavePath
+          filename: filename
+          fileUrl: fileUrl
+          status: status
+        status: status
+      properties:
+        repositoryFiles:
+          description: 知识库文件信息
+          items:
+            $ref: '#/components/schemas/Repository'
+          type: array
+        status:
+          description: 知识库同步到向量数据库的状态
+          type: string
+      type: object
+    ResultDTOBoolean:
+      example:
+        code: 0
+        data: true
+        requestId: requestId
+        success: true
+        errorMessageKey: errorMessageKey
+        errorMessage: errorMessage
+      properties:
+        requestId:
+          type: string
+        code:
+          format: int32
+          type: integer
+        errorMessage:
+          type: string
+        errorMessageKey:
+          type: string
+        data:
+          type: boolean
+        success:
+          type: boolean
+      type: object
+    CharacterVersionCreateOrUpdateDTO:
+      description: 角色版本创建或更新对象
+      example:
+        traits: traits
+        chatExample: chatExample
+        avatar:
+          fileSavePath: fileSavePath
+          filename: filename
+          fileUrl: fileUrl
+        type: type
+        version: 0
+        chatObjective: chatObjective
+        basicInformation: basicInformation
+        openingLine: openingLine
+        advancedConfig:
+          chatDescription: chatDescription
+          modelConfig:
+            minLength: 6
+            temperature: 5.962133916683182
+            topP: 1.4658129805029452
+            maxLength: 0
+          allowSendImage: true
+          allowSendAsr: true
+          isRealInfo: true
+          searchKeyword: searchKeyword
+          repositoryInfo:
+            repositoryFiles:
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            status: status
+          imageStyle: imageStyle
+          asrStyle: asrStyle
+        name: name
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        characterId: characterId
+        introduction: introduction
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        name:
+          description: 角色名称(最多20个字符)
+          maxLength: 20
+          minLength: 1
+          type: string
+        avatar:
+          $ref: '#/components/schemas/FileInfoVO'
+        introduction:
+          description: 角色描述
+          maxLength: 30
+          minLength: 1
+          type: string
+        basicInformation:
+          description: 基本信息
+          type: string
+        openingLine:
+          description: 开场白
+          type: string
+        traits:
+          description: 角色特点
+          type: string
+        chatExample:
+          description: 聊天示例
+          type: string
+        type:
+          description: 角色类型，virtual:虚拟角色，reproduction:已知角色复刻
+          type: string
+        chatObjective:
+          description: 对话目标
+          type: string
+        advancedConfig:
+          $ref: '#/components/schemas/CharacterAdvancedConfig'
+        characterId:
+          description: 角色标识
+          type: string
+        version:
+          description: 角色版本，相同角色版本号唯一
+          format: int32
+          type: integer
+      required:
+      - basicInformation
+      - characterId
+      - introduction
+      - name
+      - openingLine
+      - version
+      type: object
+    CharacterDTO:
+      description: 角色信息
+      example:
+        permConfig:
+          allowApi: 9
+          allowChat: 7
+          isPublic: 2
+        gmtModified: 2000-01-23T04:56:07.000+00:00
+        traits: traits
+        type: type
+        majorVersion: 1
+        manageable: true
+        basicInformation: basicInformation
+        openingLine: openingLine
+        modifiedBy: modifiedBy
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        characterId: characterId
+        introduction: introduction
+        backgroundImgUrl: backgroundImgUrl
+        creator: creator
+        chatExample: chatExample
+        avatar:
+          fileSavePath: fileSavePath
+          filename: filename
+          fileUrl: fileUrl
+        extractMemory: true
+        gmtCreate: 2000-01-23T04:56:07.000+00:00
+        version: 6
+        userId: userId
+        isPreConfigured: true
+        chatObjective: chatObjective
+        tags:
+        - tags
+        - tags
+        advancedConfig:
+          chatDescription: chatDescription
+          modelConfig:
+            minLength: 6
+            temperature: 5.962133916683182
+            topP: 1.4658129805029452
+            maxLength: 0
+          allowSendImage: true
+          allowSendAsr: true
+          isRealInfo: true
+          searchKeyword: searchKeyword
+          repositoryInfo:
+            repositoryFiles:
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            status: status
+          imageStyle: imageStyle
+          asrStyle: asrStyle
+        versions:
+        - 5
+        - 5
+        extractMoment: true
+        name: name
+        bubbles:
+        - bubbles
+        - bubbles
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        name:
+          description: 角色名称(最多20个字符)
+          maxLength: 20
+          minLength: 1
+          type: string
+        avatar:
+          $ref: '#/components/schemas/FileInfoVO'
+        introduction:
+          description: 角色描述
+          maxLength: 30
+          minLength: 1
+          type: string
+        basicInformation:
+          description: 基本信息
+          type: string
+        openingLine:
+          description: 开场白
+          type: string
+        traits:
+          description: 角色特点
+          type: string
+        chatExample:
+          description: 聊天示例
+          type: string
+        type:
+          description: 角色类型，virtual:虚拟角色，reproduction:已知角色复刻
+          type: string
+        chatObjective:
+          description: 对话目标
+          type: string
+        advancedConfig:
+          $ref: '#/components/schemas/CharacterAdvancedConfig'
+        characterId:
+          description: 角色唯一ID
+          type: string
+        version:
+          description: 角色版本
+          format: int32
+          type: integer
+        majorVersion:
+          description: 主版本
+          format: int32
+          type: integer
+        gmtCreate:
+          description: 创建时间
+          format: date-time
+          type: string
+        gmtModified:
+          description: 修改时间
+          format: date-time
+          type: string
+        userId:
+          description: 角色创建用户ID
+          type: string
+        modifiedBy:
+          description: 角色最后修改人ID
+          type: string
+        tags:
+          description: 角色标签
+          items:
+            description: 角色标签
+            type: string
+          type: array
+        bubbles:
+          description: 角色气泡
+          items:
+            description: 角色气泡
+            type: string
+          type: array
+        backgroundImgUrl:
+          description: 背景图片
+          type: string
+        permConfig:
+          $ref: '#/components/schemas/CharacterPermissionConfig'
+        versions:
+          description: 版本列表
+          items:
+            description: 版本列表
+            format: int32
+            type: integer
+          type: array
+        manageable:
+          description: 当前用户是否可管理
+          type: boolean
+        creator:
+          description: 创建者
+          type: string
+        isPreConfigured:
+          description: 是否官方创建
+          type: boolean
+        extractMemory:
+          description: 是否抽取记忆
+          type: boolean
+        extractMoment:
+          description: 是否抽取瞬间
+          type: boolean
+      required:
+      - basicInformation
+      - introduction
+      - name
+      - openingLine
+      type: object
+    ResultDTOCharacterDTO:
+      example:
+        code: 0
+        data:
+          permConfig:
+            allowApi: 9
+            allowChat: 7
+            isPublic: 2
+          gmtModified: 2000-01-23T04:56:07.000+00:00
+          traits: traits
+          type: type
+          majorVersion: 1
+          manageable: true
+          basicInformation: basicInformation
+          openingLine: openingLine
+          modifiedBy: modifiedBy
+          gatewayAddContent:
+            userInfo:
+              key: userInfo
+            context:
+              serviceType: serviceType
+              flowJsonPath: flowJsonPath
+              fcUrl: fcUrl
+          characterId: characterId
+          introduction: introduction
+          backgroundImgUrl: backgroundImgUrl
+          creator: creator
+          chatExample: chatExample
+          avatar:
+            fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+          extractMemory: true
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          version: 6
+          userId: userId
+          isPreConfigured: true
+          chatObjective: chatObjective
+          tags:
+          - tags
+          - tags
+          advancedConfig:
+            chatDescription: chatDescription
+            modelConfig:
+              minLength: 6
+              temperature: 5.962133916683182
+              topP: 1.4658129805029452
+              maxLength: 0
+            allowSendImage: true
+            allowSendAsr: true
+            isRealInfo: true
+            searchKeyword: searchKeyword
+            repositoryInfo:
+              repositoryFiles:
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              status: status
+            imageStyle: imageStyle
+            asrStyle: asrStyle
+          versions:
+          - 5
+          - 5
+          extractMoment: true
+          name: name
+          bubbles:
+          - bubbles
+          - bubbles
+        requestId: requestId
+        success: true
+        errorMessageKey: errorMessageKey
+        errorMessage: errorMessage
+      properties:
+        requestId:
+          type: string
+        code:
+          format: int32
+          type: integer
+        errorMessage:
+          type: string
+        errorMessageKey:
+          type: string
+        data:
+          $ref: '#/components/schemas/CharacterDTO'
+        success:
+          type: boolean
+      type: object
+    AdvancedSettings:
+      example:
+        enableCharacterKbSearch: true
+        enableDebug: true
+        enableWebSearch: true
+        searchEnhancedKeyword: searchEnhancedKeyword
+        enableLongTermMemory: true
+      properties:
+        enableWebSearch:
+          type: boolean
+        searchEnhancedKeyword:
+          type: string
+        enableCharacterKbSearch:
+          type: boolean
+        enableLongTermMemory:
+          type: boolean
+        enableDebug:
+          type: boolean
+      type: object
+    BotProfile:
+      example:
+        name: name
+        characterId: characterId
+        version: 0
+        content: content
+      properties:
+        characterId:
+          type: string
+        version:
+          format: int32
+          type: integer
+        name:
+          type: string
+        content:
+          type: string
+      type: object
+    ChatReqParams:
+      example:
+        streaming: true
+        modelParameters:
+          topK: 1
+          modelName: modelName
+          seed: 5
+          minLength: 5
+          temperature: 7.061401241503109
+          topP: 6.027456183070403
+          maxLength: 2
+        scenario:
+          topics:
+          - topics
+          - topics
+          description: description
+          userTags:
+          - userTags
+          - userTags
+        advancedSettings:
+          enableCharacterKbSearch: true
+          enableDebug: true
+          enableWebSearch: true
+          searchEnhancedKeyword: searchEnhancedKeyword
+          enableLongTermMemory: true
+        context:
+          modelName: modelName
+          chatId: chatId
+          replyMessageId: replyMessageId
+          requestId: requestId
+          chatRoomId: 9
+          messageId: messageId
+          modelRequestId: modelRequestId
+          sessionId: sessionId
+          enableDataInspection: true
+          characterPk: 3
+          isSave: true
+        messages:
+        - role: role
+          meta:
+            hasRisk: true
+            rewriteContent: rewriteContent
+            safetyStdAnswer: safetyStdAnswer
+          name: name
+          finishReason: finishReason
+          content: content
+        - role: role
+          meta:
+            hasRisk: true
+            rewriteContent: rewriteContent
+            safetyStdAnswer: safetyStdAnswer
+          name: name
+          finishReason: finishReason
+          content: content
+        - role: role
+          meta:
+            hasRisk: true
+            rewriteContent: rewriteContent
+            safetyStdAnswer: safetyStdAnswer
+          name: name
+          finishReason: finishReason
+          content: content
+        - role: role
+          meta:
+            hasRisk: true
+            rewriteContent: rewriteContent
+            safetyStdAnswer: safetyStdAnswer
+          name: name
+          finishReason: finishReason
+          content: content
+        - role: role
+          meta:
+            hasRisk: true
+            rewriteContent: rewriteContent
+            safetyStdAnswer: safetyStdAnswer
+          name: name
+          finishReason: finishReason
+          content: content
+        botProfile:
+          name: name
+          characterId: characterId
+          version: 0
+          content: content
+        source: source
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        chatSamples:
+        - role: role
+          name: name
+          content: content
+        - role: role
+          name: name
+          content: content
+        userProfile:
+          userName: userName
+          userId: userId
+          basicInfo: basicInfo
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        botProfile:
+          $ref: '#/components/schemas/BotProfile'
+        messages:
+          items:
+            $ref: '#/components/schemas/Message'
+          maxItems: 50
+          minItems: 1
+          type: array
+        chatSamples:
+          items:
+            $ref: '#/components/schemas/ChatSampleItem'
+          type: array
+        advancedSettings:
+          $ref: '#/components/schemas/AdvancedSettings'
+        modelParameters:
+          $ref: '#/components/schemas/ModelParameters'
+        userProfile:
+          $ref: '#/components/schemas/UserProfile'
+        scenario:
+          $ref: '#/components/schemas/Scenario'
+        streaming:
+          type: boolean
+        context:
+          $ref: '#/components/schemas/Context'
+        source:
+          type: string
+      required:
+      - botProfile
+      - messages
+      - userProfile
+      type: object
+    ChatSampleItem:
+      example:
+        role: role
+        name: name
+        content: content
+      properties:
+        role:
+          type: string
+        name:
+          type: string
+        content:
+          type: string
+      type: object
+    Context:
+      example:
+        modelName: modelName
+        chatId: chatId
+        replyMessageId: replyMessageId
+        requestId: requestId
+        chatRoomId: 9
+        messageId: messageId
+        modelRequestId: modelRequestId
+        sessionId: sessionId
+        enableDataInspection: true
+        characterPk: 3
+        isSave: true
+      properties:
+        chatRoomId:
+          format: int64
+          type: integer
+        sessionId:
+          type: string
+        chatId:
+          type: string
+        messageId:
+          type: string
+        replyMessageId:
+          type: string
+        enableDataInspection:
+          type: boolean
+        isSave:
+          type: boolean
+        requestId:
+          type: string
+        modelRequestId:
+          type: string
+        characterPk:
+          format: int64
+          type: integer
+        modelName:
+          type: string
+      type: object
+    Message:
+      example:
+        role: role
+        meta:
+          hasRisk: true
+          rewriteContent: rewriteContent
+          safetyStdAnswer: safetyStdAnswer
+        name: name
+        finishReason: finishReason
+        content: content
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        content:
+          type: string
+        finishReason:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+      type: object
+    Meta:
+      example:
+        hasRisk: true
+        rewriteContent: rewriteContent
+        safetyStdAnswer: safetyStdAnswer
+      properties:
+        hasRisk:
+          type: boolean
+        safetyStdAnswer:
+          type: string
+        rewriteContent:
+          type: string
+      type: object
+    ModelParameters:
+      example:
+        topK: 1
+        modelName: modelName
+        seed: 5
+        minLength: 5
+        temperature: 7.061401241503109
+        topP: 6.027456183070403
+        maxLength: 2
+      properties:
+        modelName:
+          type: string
+        topP:
+          format: double
+          type: number
+        topK:
+          format: int32
+          type: integer
+        seed:
+          format: int64
+          type: integer
+        minLength:
+          format: int32
+          type: integer
+        maxLength:
+          format: int32
+          type: integer
+        temperature:
+          format: double
+          type: number
+      type: object
+    Scenario:
+      example:
+        topics:
+        - topics
+        - topics
+        description: description
+        userTags:
+        - userTags
+        - userTags
+      properties:
+        description:
+          type: string
+        topics:
+          items:
+            type: string
+          type: array
+        userTags:
+          items:
+            type: string
+          type: array
+      type: object
+    UserProfile:
+      example:
+        userName: userName
+        userId: userId
+        basicInfo: basicInfo
+      properties:
+        userId:
+          type: string
+        userName:
+          type: string
+        basicInfo:
+          type: string
+      required:
+      - userId
+      type: object
+    SysReminderRequest:
+      description: 系统提醒参数
+      example:
+        chatRoomId: 0
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        characterId: characterId
+        content: content
+        bizUserId: bizUserId
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        characterId:
+          description: 角色ID
+          type: string
+        chatRoomId:
+          description: 聊天室ID
+          format: int64
+          type: integer
+        content:
+          description: 系统提醒内容
+          type: string
+        bizUserId:
+          description: 业务系统ID
+          type: string
+      required:
+      - bizUserId
+      - characterId
+      - content
+      type: object
+    MessageRatingRequest:
+      example:
+        rating: 0
+        messageId: messageId
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        info: info
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        messageId:
+          description: 待评分消息ID
+          type: string
+        rating:
+          description: 评分
+          format: int32
+          maximum: 5
+          minimum: -1
+          type: integer
+        info:
+          description: 差评的具体信息
+          type: string
+      required:
+      - messageId
+      - rating
+      type: object
+    ChatHistoryQueryDTO:
+      description: 聊天历史查询对象
+      example:
+        orderBy:
+        - orderBy
+        - orderBy
+        pageSize: 1
+        where:
+          chatRoomId: 0
+          messageIds:
+          - messageIds
+          - messageIds
+          startTime: 2000-01-23T04:56:07.000+00:00
+          sessionId: sessionId
+          endTime: 2000-01-23T04:56:07.000+00:00
+          characterId: characterId
+          bizUserId: bizUserId
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        pageNum: 6
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        where:
+          $ref: '#/components/schemas/ChatHistoryQueryWhere'
+        orderBy:
+          description: |
+            排序条件，支持的排序字段为：
+            - gmtCreate
+            排序优先级按列表顺序，默认降序，如果期望升序，需要在字段后指定，如：orderBy: [\"gmtCreate desc\"] （gmtCreate 按降序）
+          items:
+            description: |
+              排序条件，支持的排序字段为：
+              - gmtCreate
+              排序优先级按列表顺序，默认降序，如果期望升序，需要在字段后指定，如：orderBy: [\"gmtCreate desc\"] （gmtCreate 按降序）
+            type: string
+          type: array
+        pageNum:
+          description: 页码，默认为 0
+          format: int32
+          type: integer
+        pageSize:
+          description: 页条目数，1～50，默认为 10
+          format: int32
+          type: integer
+      type: object
+    ChatHistoryQueryWhere:
+      description: 查询条件
+      example:
+        chatRoomId: 0
+        messageIds:
+        - messageIds
+        - messageIds
+        startTime: 2000-01-23T04:56:07.000+00:00
+        sessionId: sessionId
+        endTime: 2000-01-23T04:56:07.000+00:00
+        characterId: characterId
+        bizUserId: bizUserId
+      properties:
+        characterId:
+          description: 角色ID
+          type: string
+        chatRoomId:
+          description: 聊天室ID
+          format: int64
+          type: integer
+        sessionId:
+          description: 会话ID
+          type: string
+        startTime:
+          description: 开始时间
+          format: date-time
+          type: string
+        endTime:
+          description: 结束时间
+          format: date-time
+          type: string
+        messageIds:
+          description: 消息ID列表
+          items:
+            description: 消息ID列表
+            type: string
+          type: array
+        bizUserId:
+          description: 对话用户，给PASS接口用
+          type: string
+      type: object
+    ChatMessageDTO:
+      description: 聊天消息
+      example:
+        messageIssuer:
+          userType: userType
+          userName: userName
+          userId: userId
+          bizUserId: bizUserId
+        messageType: messageType
+        chatId: chatId
+        regenerateTimes: 1
+        isGreeting: true
+        rating: 6.027456183070403
+        messageId: messageId
+        sessionId: sessionId
+        gmtCreate: 2000-01-23T04:56:07.000+00:00
+        content: content
+      properties:
+        content:
+          description: 消息内容
+          type: string
+        messageType:
+          description: "消息类型，opening_remarks: 开场白，sys_greetings: 系统问候，user: 用户, character:\
+            \ 角色"
+          type: string
+        messageId:
+          description: 消息ID
+          type: string
+        messageIssuer:
+          $ref: '#/components/schemas/ChatRoomUserDTO'
+        sessionId:
+          description: 消息对话session_id
+          type: string
+        chatId:
+          description: 一次对话ID
+          type: string
+        gmtCreate:
+          description: 消息创建时间
+          format: date-time
+          type: string
+        isGreeting:
+          description: 是否为开场白
+          type: boolean
+        rating:
+          description: 消息评分
+          format: double
+          type: number
+        regenerateTimes:
+          description: 重新生成次数
+          format: int32
+          type: integer
+      type: object
+    ChatRoomUserDTO:
+      description: 聊天室用户
+      example:
+        userType: userType
+        userName: userName
+        userId: userId
+        bizUserId: bizUserId
+      properties:
+        userId:
+          description: "用户ID，若为普通用户，则为userId,;若为角色，则为characterId"
+          type: string
+        bizUserId:
+          description: 若为ISV用户，则为ISV用户ID；若为角色，则为空
+          type: string
+        userName:
+          description: 用户名称，若为普通用户，则为用户名称；若为角色，则为 characterName
+          type: string
+        userType:
+          description: 用户类型，可以是 user（用户）或character（角色）
+          type: string
+      type: object
+    PageResultChatMessageDTO:
+      example:
+        total: 2
+        pageOffsetValue: 7
+        pageSize: 5
+        page: 5
+        list:
+        - messageIssuer:
+            userType: userType
+            userName: userName
+            userId: userId
+            bizUserId: bizUserId
+          messageType: messageType
+          chatId: chatId
+          regenerateTimes: 1
+          isGreeting: true
+          rating: 6.027456183070403
+          messageId: messageId
+          sessionId: sessionId
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          content: content
+        - messageIssuer:
+            userType: userType
+            userName: userName
+            userId: userId
+            bizUserId: bizUserId
+          messageType: messageType
+          chatId: chatId
+          regenerateTimes: 1
+          isGreeting: true
+          rating: 6.027456183070403
+          messageId: messageId
+          sessionId: sessionId
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          content: content
+      properties:
+        list:
+          items:
+            $ref: '#/components/schemas/ChatMessageDTO'
+          type: array
+        page:
+          format: int32
+          type: integer
+        pageSize:
+          format: int32
+          type: integer
+        total:
+          format: int32
+          type: integer
+        pageOffsetValue:
+          format: int32
+          type: integer
+      type: object
+    ResultDTOPageResultChatMessageDTO:
+      example:
+        code: 0
+        data:
+          total: 2
+          pageOffsetValue: 7
+          pageSize: 5
+          page: 5
+          list:
+          - messageIssuer:
+              userType: userType
+              userName: userName
+              userId: userId
+              bizUserId: bizUserId
+            messageType: messageType
+            chatId: chatId
+            regenerateTimes: 1
+            isGreeting: true
+            rating: 6.027456183070403
+            messageId: messageId
+            sessionId: sessionId
+            gmtCreate: 2000-01-23T04:56:07.000+00:00
+            content: content
+          - messageIssuer:
+              userType: userType
+              userName: userName
+              userId: userId
+              bizUserId: bizUserId
+            messageType: messageType
+            chatId: chatId
+            regenerateTimes: 1
+            isGreeting: true
+            rating: 6.027456183070403
+            messageId: messageId
+            sessionId: sessionId
+            gmtCreate: 2000-01-23T04:56:07.000+00:00
+            content: content
+        requestId: requestId
+        success: true
+        errorMessageKey: errorMessageKey
+        errorMessage: errorMessage
+      properties:
+        requestId:
+          type: string
+        code:
+          format: int32
+          type: integer
+        errorMessage:
+          type: string
+        errorMessageKey:
+          type: string
+        data:
+          $ref: '#/components/schemas/PageResultChatMessageDTO'
+        success:
+          type: boolean
+      type: object
+    CharacterQueryDTO:
+      description: 角色查询请求对象
+      example:
+        orderBy:
+        - orderBy
+        - orderBy
+        pageSize: 6
+        where:
+          scope: scope
+          characterName: characterName
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        pageNum: 0
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        where:
+          $ref: '#/components/schemas/CharacterQueryWhere'
+        orderBy:
+          description: |
+            排序条件，支持的排序字段为：
+            - modifiedTime
+            - createTime
+            排序优先级按列表顺序，默认降序，如果期望升序，需要在字段后指定，如：orderBy: [\"gmtModified desc\"] （gmtModified 按降序）
+          items:
+            description: |
+              排序条件，支持的排序字段为：
+              - modifiedTime
+              - createTime
+              排序优先级按列表顺序，默认降序，如果期望升序，需要在字段后指定，如：orderBy: [\"gmtModified desc\"] （gmtModified 按降序）
+            type: string
+          type: array
+        pageNum:
+          description: 页码，默认为 0
+          format: int64
+          type: integer
+        pageSize:
+          description: 页条目数，1～50，默认为 10
+          format: int64
+          type: integer
+      type: object
+    CharacterQueryWhere:
+      description: 查询条件
+      example:
+        scope: scope
+        characterName: characterName
+      properties:
+        characterName:
+          description: 角色名称
+          type: string
+        scope:
+          description: "查询范围：my:我创建的角色, public: 平台开放的角色, pre_configured: 预制角色"
+          type: string
+      type: object
+    PageResultCharacterDTO:
+      example:
+        total: 5
+        pageOffsetValue: 5
+        pageSize: 1
+        page: 6
+        list:
+        - permConfig:
+            allowApi: 9
+            allowChat: 7
+            isPublic: 2
+          gmtModified: 2000-01-23T04:56:07.000+00:00
+          traits: traits
+          type: type
+          majorVersion: 1
+          manageable: true
+          basicInformation: basicInformation
+          openingLine: openingLine
+          modifiedBy: modifiedBy
+          gatewayAddContent:
+            userInfo:
+              key: userInfo
+            context:
+              serviceType: serviceType
+              flowJsonPath: flowJsonPath
+              fcUrl: fcUrl
+          characterId: characterId
+          introduction: introduction
+          backgroundImgUrl: backgroundImgUrl
+          creator: creator
+          chatExample: chatExample
+          avatar:
+            fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+          extractMemory: true
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          version: 6
+          userId: userId
+          isPreConfigured: true
+          chatObjective: chatObjective
+          tags:
+          - tags
+          - tags
+          advancedConfig:
+            chatDescription: chatDescription
+            modelConfig:
+              minLength: 6
+              temperature: 5.962133916683182
+              topP: 1.4658129805029452
+              maxLength: 0
+            allowSendImage: true
+            allowSendAsr: true
+            isRealInfo: true
+            searchKeyword: searchKeyword
+            repositoryInfo:
+              repositoryFiles:
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              status: status
+            imageStyle: imageStyle
+            asrStyle: asrStyle
+          versions:
+          - 5
+          - 5
+          extractMoment: true
+          name: name
+          bubbles:
+          - bubbles
+          - bubbles
+        - permConfig:
+            allowApi: 9
+            allowChat: 7
+            isPublic: 2
+          gmtModified: 2000-01-23T04:56:07.000+00:00
+          traits: traits
+          type: type
+          majorVersion: 1
+          manageable: true
+          basicInformation: basicInformation
+          openingLine: openingLine
+          modifiedBy: modifiedBy
+          gatewayAddContent:
+            userInfo:
+              key: userInfo
+            context:
+              serviceType: serviceType
+              flowJsonPath: flowJsonPath
+              fcUrl: fcUrl
+          characterId: characterId
+          introduction: introduction
+          backgroundImgUrl: backgroundImgUrl
+          creator: creator
+          chatExample: chatExample
+          avatar:
+            fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+          extractMemory: true
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          version: 6
+          userId: userId
+          isPreConfigured: true
+          chatObjective: chatObjective
+          tags:
+          - tags
+          - tags
+          advancedConfig:
+            chatDescription: chatDescription
+            modelConfig:
+              minLength: 6
+              temperature: 5.962133916683182
+              topP: 1.4658129805029452
+              maxLength: 0
+            allowSendImage: true
+            allowSendAsr: true
+            isRealInfo: true
+            searchKeyword: searchKeyword
+            repositoryInfo:
+              repositoryFiles:
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              status: status
+            imageStyle: imageStyle
+            asrStyle: asrStyle
+          versions:
+          - 5
+          - 5
+          extractMoment: true
+          name: name
+          bubbles:
+          - bubbles
+          - bubbles
+      properties:
+        list:
+          items:
+            $ref: '#/components/schemas/CharacterDTO'
+          type: array
+        page:
+          format: int32
+          type: integer
+        pageSize:
+          format: int32
+          type: integer
+        total:
+          format: int32
+          type: integer
+        pageOffsetValue:
+          format: int32
+          type: integer
+      type: object
+    ResultDTOPageResultCharacterDTO:
+      example:
+        code: 0
+        data:
+          total: 5
+          pageOffsetValue: 5
+          pageSize: 1
+          page: 6
+          list:
+          - permConfig:
+              allowApi: 9
+              allowChat: 7
+              isPublic: 2
+            gmtModified: 2000-01-23T04:56:07.000+00:00
+            traits: traits
+            type: type
+            majorVersion: 1
+            manageable: true
+            basicInformation: basicInformation
+            openingLine: openingLine
+            modifiedBy: modifiedBy
+            gatewayAddContent:
+              userInfo:
+                key: userInfo
+              context:
+                serviceType: serviceType
+                flowJsonPath: flowJsonPath
+                fcUrl: fcUrl
+            characterId: characterId
+            introduction: introduction
+            backgroundImgUrl: backgroundImgUrl
+            creator: creator
+            chatExample: chatExample
+            avatar:
+              fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+            extractMemory: true
+            gmtCreate: 2000-01-23T04:56:07.000+00:00
+            version: 6
+            userId: userId
+            isPreConfigured: true
+            chatObjective: chatObjective
+            tags:
+            - tags
+            - tags
+            advancedConfig:
+              chatDescription: chatDescription
+              modelConfig:
+                minLength: 6
+                temperature: 5.962133916683182
+                topP: 1.4658129805029452
+                maxLength: 0
+              allowSendImage: true
+              allowSendAsr: true
+              isRealInfo: true
+              searchKeyword: searchKeyword
+              repositoryInfo:
+                repositoryFiles:
+                - fileSavePath: fileSavePath
+                  filename: filename
+                  fileUrl: fileUrl
+                  status: status
+                - fileSavePath: fileSavePath
+                  filename: filename
+                  fileUrl: fileUrl
+                  status: status
+                status: status
+              imageStyle: imageStyle
+              asrStyle: asrStyle
+            versions:
+            - 5
+            - 5
+            extractMoment: true
+            name: name
+            bubbles:
+            - bubbles
+            - bubbles
+          - permConfig:
+              allowApi: 9
+              allowChat: 7
+              isPublic: 2
+            gmtModified: 2000-01-23T04:56:07.000+00:00
+            traits: traits
+            type: type
+            majorVersion: 1
+            manageable: true
+            basicInformation: basicInformation
+            openingLine: openingLine
+            modifiedBy: modifiedBy
+            gatewayAddContent:
+              userInfo:
+                key: userInfo
+              context:
+                serviceType: serviceType
+                flowJsonPath: flowJsonPath
+                fcUrl: fcUrl
+            characterId: characterId
+            introduction: introduction
+            backgroundImgUrl: backgroundImgUrl
+            creator: creator
+            chatExample: chatExample
+            avatar:
+              fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+            extractMemory: true
+            gmtCreate: 2000-01-23T04:56:07.000+00:00
+            version: 6
+            userId: userId
+            isPreConfigured: true
+            chatObjective: chatObjective
+            tags:
+            - tags
+            - tags
+            advancedConfig:
+              chatDescription: chatDescription
+              modelConfig:
+                minLength: 6
+                temperature: 5.962133916683182
+                topP: 1.4658129805029452
+                maxLength: 0
+              allowSendImage: true
+              allowSendAsr: true
+              isRealInfo: true
+              searchKeyword: searchKeyword
+              repositoryInfo:
+                repositoryFiles:
+                - fileSavePath: fileSavePath
+                  filename: filename
+                  fileUrl: fileUrl
+                  status: status
+                - fileSavePath: fileSavePath
+                  filename: filename
+                  fileUrl: fileUrl
+                  status: status
+                status: status
+              imageStyle: imageStyle
+              asrStyle: asrStyle
+            versions:
+            - 5
+            - 5
+            extractMoment: true
+            name: name
+            bubbles:
+            - bubbles
+            - bubbles
+        requestId: requestId
+        success: true
+        errorMessageKey: errorMessageKey
+        errorMessage: errorMessage
+      properties:
+        requestId:
+          type: string
+        code:
+          format: int32
+          type: integer
+        errorMessage:
+          type: string
+        errorMessageKey:
+          type: string
+        data:
+          $ref: '#/components/schemas/PageResultCharacterDTO'
+        success:
+          type: boolean
+      type: object
+    CharacterCreateDTO:
+      description: 角色创建对象
+      example:
+        permConfig:
+          allowApi: 9
+          allowChat: 7
+          isPublic: 2
+        basicInformation: basicInformation
+        openingLine: openingLine
+        traits: traits
+        advancedConfig:
+          chatDescription: chatDescription
+          modelConfig:
+            minLength: 6
+            temperature: 5.962133916683182
+            topP: 1.4658129805029452
+            maxLength: 0
+          allowSendImage: true
+          allowSendAsr: true
+          isRealInfo: true
+          searchKeyword: searchKeyword
+          repositoryInfo:
+            repositoryFiles:
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            - fileSavePath: fileSavePath
+              filename: filename
+              fileUrl: fileUrl
+              status: status
+            status: status
+          imageStyle: imageStyle
+          asrStyle: asrStyle
+        name: name
+        chatExample: chatExample
+        avatar:
+          fileSavePath: fileSavePath
+          filename: filename
+          fileUrl: fileUrl
+        gatewayAddContent:
+          userInfo:
+            key: userInfo
+          context:
+            serviceType: serviceType
+            flowJsonPath: flowJsonPath
+            fcUrl: fcUrl
+        type: type
+        introduction: introduction
+        chatObjective: chatObjective
+      properties:
+        gatewayAddContent:
+          $ref: '#/components/schemas/GatewayIssuedParams'
+        name:
+          description: 角色名称(最多20个字符)
+          maxLength: 20
+          minLength: 1
+          type: string
+        avatar:
+          $ref: '#/components/schemas/FileInfoVO'
+        introduction:
+          description: 角色描述
+          maxLength: 30
+          minLength: 1
+          type: string
+        basicInformation:
+          description: 基本信息
+          type: string
+        openingLine:
+          description: 开场白
+          type: string
+        traits:
+          description: 角色特点
+          type: string
+        chatExample:
+          description: 聊天示例
+          type: string
+        type:
+          description: 角色类型，virtual:虚拟角色，reproduction:已知角色复刻
+          type: string
+        chatObjective:
+          description: 对话目标
+          type: string
+        advancedConfig:
+          $ref: '#/components/schemas/CharacterAdvancedConfig'
+        permConfig:
+          $ref: '#/components/schemas/CharacterPermissionConfig'
+      required:
+      - basicInformation
+      - introduction
+      - name
+      - openingLine
+      type: object
+    CharacterKey:
+      example:
+        characterId: characterId
+        version: 6
+      properties:
+        characterId:
+          type: string
+        version:
+          format: int32
+          type: integer
+      type: object
+    ResultDTOCharacterKey:
+      example:
+        code: 0
+        data:
+          characterId: characterId
+          version: 6
+        requestId: requestId
+        success: true
+        errorMessageKey: errorMessageKey
+        errorMessage: errorMessage
+      properties:
+        requestId:
+          type: string
+        code:
+          format: int32
+          type: integer
+        errorMessage:
+          type: string
+        errorMessageKey:
+          type: string
+        data:
+          $ref: '#/components/schemas/CharacterKey'
+        success:
+          type: boolean
+      type: object
+    ResultDTOListCharacterDTO:
+      example:
+        code: 0
+        data:
+        - permConfig:
+            allowApi: 9
+            allowChat: 7
+            isPublic: 2
+          gmtModified: 2000-01-23T04:56:07.000+00:00
+          traits: traits
+          type: type
+          majorVersion: 1
+          manageable: true
+          basicInformation: basicInformation
+          openingLine: openingLine
+          modifiedBy: modifiedBy
+          gatewayAddContent:
+            userInfo:
+              key: userInfo
+            context:
+              serviceType: serviceType
+              flowJsonPath: flowJsonPath
+              fcUrl: fcUrl
+          characterId: characterId
+          introduction: introduction
+          backgroundImgUrl: backgroundImgUrl
+          creator: creator
+          chatExample: chatExample
+          avatar:
+            fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+          extractMemory: true
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          version: 6
+          userId: userId
+          isPreConfigured: true
+          chatObjective: chatObjective
+          tags:
+          - tags
+          - tags
+          advancedConfig:
+            chatDescription: chatDescription
+            modelConfig:
+              minLength: 6
+              temperature: 5.962133916683182
+              topP: 1.4658129805029452
+              maxLength: 0
+            allowSendImage: true
+            allowSendAsr: true
+            isRealInfo: true
+            searchKeyword: searchKeyword
+            repositoryInfo:
+              repositoryFiles:
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              status: status
+            imageStyle: imageStyle
+            asrStyle: asrStyle
+          versions:
+          - 5
+          - 5
+          extractMoment: true
+          name: name
+          bubbles:
+          - bubbles
+          - bubbles
+        - permConfig:
+            allowApi: 9
+            allowChat: 7
+            isPublic: 2
+          gmtModified: 2000-01-23T04:56:07.000+00:00
+          traits: traits
+          type: type
+          majorVersion: 1
+          manageable: true
+          basicInformation: basicInformation
+          openingLine: openingLine
+          modifiedBy: modifiedBy
+          gatewayAddContent:
+            userInfo:
+              key: userInfo
+            context:
+              serviceType: serviceType
+              flowJsonPath: flowJsonPath
+              fcUrl: fcUrl
+          characterId: characterId
+          introduction: introduction
+          backgroundImgUrl: backgroundImgUrl
+          creator: creator
+          chatExample: chatExample
+          avatar:
+            fileSavePath: fileSavePath
+            filename: filename
+            fileUrl: fileUrl
+          extractMemory: true
+          gmtCreate: 2000-01-23T04:56:07.000+00:00
+          version: 6
+          userId: userId
+          isPreConfigured: true
+          chatObjective: chatObjective
+          tags:
+          - tags
+          - tags
+          advancedConfig:
+            chatDescription: chatDescription
+            modelConfig:
+              minLength: 6
+              temperature: 5.962133916683182
+              topP: 1.4658129805029452
+              maxLength: 0
+            allowSendImage: true
+            allowSendAsr: true
+            isRealInfo: true
+            searchKeyword: searchKeyword
+            repositoryInfo:
+              repositoryFiles:
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              - fileSavePath: fileSavePath
+                filename: filename
+                fileUrl: fileUrl
+                status: status
+              status: status
+            imageStyle: imageStyle
+            asrStyle: asrStyle
+          versions:
+          - 5
+          - 5
+          extractMoment: true
+          name: name
+          bubbles:
+          - bubbles
+          - bubbles
+        requestId: requestId
+        success: true
+        errorMessageKey: errorMessageKey
+        errorMessage: errorMessage
+      properties:
+        requestId:
+          type: string
+        code:
+          format: int32
+          type: integer
+        errorMessage:
+          type: string
+        errorMessageKey:
+          type: string
+        data:
+          items:
+            $ref: '#/components/schemas/CharacterDTO'
+          type: array
+        success:
+          type: boolean
+      type: object
+  securitySchemes:
+    Authorization:
+      bearerFormat: ""
+      scheme: bearer
+      type: http
+    x-fag-servicename:
+      in: header
+      name: x-fag-servicename
+      type: apiKey
