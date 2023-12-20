@@ -10,8 +10,8 @@ Testing CharacterApiSubService
 package xingchen
 
 import (
-	openapiclient "alimt-character-ai-sdk-go/xingchen"
 	"context"
+	openapiclient "github.com/alifanyi/alimt-character-ai-sdk-go/xingchen"
 	"testing"
 )
 
