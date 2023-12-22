@@ -19,9 +19,11 @@ var _ MappedNullable = &Scenario{}
 
 // Scenario struct for Scenario
 type Scenario struct {
-	Description          *string  `json:"description,omitempty"`
-	Topics               []string `json:"topics,omitempty"`
-	UserTags             []string `json:"userTags,omitempty"`
+	Description  *string  `json:"description,omitempty"`
+	Topics       []string `json:"topics,omitempty"`
+	UserTags     []string `json:"userTags,omitempty"`
+	SafetyPrompt *string  `json:"safetyPrompt,omitempty"`
+
 	AdditionalProperties map[string]interface{}
 }
 
@@ -140,6 +142,33 @@ func (o *Scenario) SetUserTags(v []string) {
 	o.UserTags = v
 }
 
+func (o *Scenario) GetSafetyPrompt() string {
+	if o == nil || IsNil(o.SafetyPrompt) {
+		var ret string
+		return ret
+	}
+	return *o.SafetyPrompt
+}
+
+func (o *Scenario) GetSafetyPromptOk() (*string, bool) {
+	if o == nil || IsNil(o.SafetyPrompt) {
+		return nil, false
+	}
+	return o.SafetyPrompt, true
+}
+
+func (o *Scenario) HasSafetyPrompt() bool {
+	if o != nil && !IsNil(o.SafetyPrompt) {
+		return true
+	}
+
+	return false
+}
+
+func (o *Scenario) SetSafetyPrompt(v string) {
+	o.SafetyPrompt = &v
+}
+
 func (o Scenario) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -158,6 +187,9 @@ func (o Scenario) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.UserTags) {
 		toSerialize["userTags"] = o.UserTags
+	}
+	if !IsNil(o.SafetyPrompt) {
+		toSerialize["safetyPrompt"] = o.SafetyPrompt
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -184,6 +216,7 @@ func (o *Scenario) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "topics")
 		delete(additionalProperties, "userTags")
+		delete(additionalProperties, "safetyPrompt")
 		o.AdditionalProperties = additionalProperties
 	}
 

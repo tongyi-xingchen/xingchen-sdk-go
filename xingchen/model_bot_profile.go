@@ -23,6 +23,7 @@ type BotProfile struct {
 	Version              *int32  `json:"version,omitempty"`
 	Name                 *string `json:"name,omitempty"`
 	Content              *string `json:"content,omitempty"`
+	BotType              *string `json:"type,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -173,6 +174,33 @@ func (o *BotProfile) SetContent(v string) {
 	o.Content = &v
 }
 
+func (o *BotProfile) GetBotType() string {
+	if o == nil || IsNil(o.BotType) {
+		var ret string
+		return ret
+	}
+	return *o.BotType
+}
+
+func (o *BotProfile) GetBotTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.BotType) {
+		return nil, false
+	}
+	return o.BotType, true
+}
+
+func (o *BotProfile) HasBotType() bool {
+	if o != nil && !IsNil(o.BotType) {
+		return true
+	}
+
+	return false
+}
+
+func (o *BotProfile) SetBotType(v string) {
+	o.BotType = &v
+}
+
 func (o BotProfile) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -194,6 +222,9 @@ func (o BotProfile) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Content) {
 		toSerialize["content"] = o.Content
+	}
+	if !IsNil(o.BotType) {
+		toSerialize["type"] = o.BotType
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -221,6 +252,7 @@ func (o *BotProfile) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "version")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "content")
+		delete(additionalProperties, "type")
 		o.AdditionalProperties = additionalProperties
 	}
 
