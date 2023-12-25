@@ -11,7 +11,7 @@ package xingchen
 
 import (
 	"context"
-	openapiclient "github.com/alifanyi/alimt-character-ai-sdk-go/xingchen"
+	openapiclient "github.com/tongyi-xingchen/alimt-character-ai-sdk-go/xingchen"
 	"testing"
 )
 
