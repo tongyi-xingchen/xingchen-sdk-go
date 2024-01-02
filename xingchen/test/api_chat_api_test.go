@@ -11,7 +11,8 @@ package xingchen
 
 import (
 	"context"
-	openapiclient "github.com/tongyi-xingchen/alimt-character-ai-sdk-go/xingchen"
+	"fmt"
+	openapiclient "github.com/tongyi-xingchen/xingchen-sdk-go/xingchen"
 	"io"
 	"testing"
 )
@@ -64,6 +65,7 @@ func Test_xingchen_ChatApiSubService(t *testing.T) {
 			if *resp.Code != int32(200) {
 				t.Fatal()
 			}
+			fmt.Println(*resp.Data.Choices[0].Messages[0].Content)
 		}
 	})
 }
@@ -71,17 +73,17 @@ func Test_xingchen_ChatApiSubService(t *testing.T) {
 func buildChatReqParams() openapiclient.ChatReqParams {
 	chatReqParam := openapiclient.ChatReqParams{
 		BotProfile: openapiclient.BotProfile{
-			CharacterId: openapiclient.PtrString("xxx"),
+			CharacterId: openapiclient.PtrString("e44ee5182dc3445d8400b5c628b39876"),
 			Version:     openapiclient.PtrInt32(1),
 		},
 		ModelParameters: &openapiclient.ModelParameters{
-			Seed:        openapiclient.PtrInt64(1683806810),
-			TopP:        openapiclient.PtrFloat64(0.8),
-			TopK:        openapiclient.PtrInt32(100),
-			MaxLength:   openapiclient.PtrInt32(100),
-			MinLength:   openapiclient.PtrInt32(50),
-			Temperature: openapiclient.PtrFloat64(0.8),
-			ModelName:   openapiclient.PtrString("xxx"),
+			Seed:              openapiclient.PtrInt64(1683806810),
+			TopP:              openapiclient.PtrFloat64(0.8),
+			TopK:              openapiclient.PtrInt32(100),
+			MaxLength:         openapiclient.PtrInt32(100),
+			MinLength:         openapiclient.PtrInt32(50),
+			Temperature:       openapiclient.PtrFloat64(0.8),
+			IncrementalOutput: openapiclient.PtrBool(false),
 		},
 		UserProfile: openapiclient.UserProfile{
 			UserId: "1234",

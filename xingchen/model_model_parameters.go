@@ -26,6 +26,7 @@ type ModelParameters struct {
 	MinLength            *int32   `json:"minLength,omitempty"`
 	MaxLength            *int32   `json:"maxLength,omitempty"`
 	Temperature          *float64 `json:"temperature,omitempty"`
+	IncrementalOutput    *bool    `json:"incremental_output,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -272,6 +273,35 @@ func (o *ModelParameters) SetTemperature(v float64) {
 	o.Temperature = &v
 }
 
+func (o *ModelParameters) GetIncrementalOutput() bool {
+	if o == nil || IsNil(o.IncrementalOutput) {
+		var ret bool
+		return ret
+	}
+	return *o.IncrementalOutput
+}
+
+func (o *ModelParameters) GetIncrementalOutputOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncrementalOutput) {
+		return nil, false
+	}
+	return o.IncrementalOutput, true
+}
+
+// HasModelName returns a boolean if a field has been set.
+func (o *ModelParameters) HasIncrementalOutput() bool {
+	if o != nil && !IsNil(o.IncrementalOutput) {
+		return true
+	}
+
+	return false
+}
+
+// SetModelName gets a reference to the given string and assigns it to the ModelName field.
+func (o *ModelParameters) SetIncrementalOutput(v bool) {
+	o.IncrementalOutput = &v
+}
+
 func (o ModelParameters) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -303,6 +333,9 @@ func (o ModelParameters) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Temperature) {
 		toSerialize["temperature"] = o.Temperature
 	}
+	if !IsNil(o.IncrementalOutput) {
+		toSerialize["incrementalOutput"] = o.IncrementalOutput
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -332,6 +365,7 @@ func (o *ModelParameters) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "minLength")
 		delete(additionalProperties, "maxLength")
 		delete(additionalProperties, "temperature")
+		delete(additionalProperties, "incrementalOutput")
 		o.AdditionalProperties = additionalProperties
 	}
 
