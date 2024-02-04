@@ -463,6 +463,9 @@ func (o ChatReqParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FunctionList) {
 		toSerialize["functionList"] = o.FunctionList
 	}
+	if !IsNil(o.FunctionChoice) {
+		toSerialize["functionChoice"] = o.FunctionChoice
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -497,6 +500,7 @@ func (o *ChatReqParams) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "context")
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "functionList")
+		delete(additionalProperties, "functionChoice")
 		o.AdditionalProperties = additionalProperties
 	}
 
