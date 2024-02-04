@@ -30,6 +30,8 @@ type ChatReqParams struct {
 	Streaming            *bool                `json:"streaming,omitempty"`
 	Context              *Context             `json:"context,omitempty"`
 	Source               *string              `json:"source,omitempty"`
+	FunctionList         []Function           `json:"function_list,omitempty"`
+	FunctionChoice       *FunctionChoice      `json:"function_choice,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -383,6 +385,44 @@ func (o *ChatReqParams) SetSource(v string) {
 	o.Source = &v
 }
 
+func (o *ChatReqParams) GetFunctionListOk() ([]Function, bool) {
+	if o == nil || IsNil(o.Source) {
+		return nil, false
+	}
+	return o.FunctionList, true
+}
+
+func (o *ChatReqParams) HasFunctionList() bool {
+	if o != nil && !IsNil(o.FunctionList) {
+		return true
+	}
+
+	return false
+}
+
+func (o *ChatReqParams) SetFunctionList(v []Function) {
+	o.FunctionList = v
+}
+
+func (o *ChatReqParams) GetFunctionChoiceOk() (*FunctionChoice, bool) {
+	if o == nil || IsNil(o.Source) {
+		return nil, false
+	}
+	return o.FunctionChoice, true
+}
+
+func (o *ChatReqParams) HasFunctionChoice() bool {
+	if o != nil && !IsNil(o.FunctionChoice) {
+		return true
+	}
+
+	return false
+}
+
+func (o *ChatReqParams) SetFunctionChoice(v *FunctionChoice) {
+	o.FunctionChoice = v
+}
+
 func (o ChatReqParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -420,6 +460,9 @@ func (o ChatReqParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Source) {
 		toSerialize["source"] = o.Source
 	}
+	if !IsNil(o.FunctionList) {
+		toSerialize["functionList"] = o.FunctionList
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -453,6 +496,7 @@ func (o *ChatReqParams) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "streaming")
 		delete(additionalProperties, "context")
 		delete(additionalProperties, "source")
+		delete(additionalProperties, "functionList")
 		o.AdditionalProperties = additionalProperties
 	}
 

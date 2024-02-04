@@ -40,6 +40,10 @@ func PtrString(v string) *string { return &v }
 // PtrTime is helper routine that returns a pointer to given Time value.
 func PtrTime(v time.Time) *time.Time { return &v }
 
+func PtrAny(v any) *interface{} {
+	return &v
+}
+
 type NullableBool struct {
 	value *bool
 	isSet bool

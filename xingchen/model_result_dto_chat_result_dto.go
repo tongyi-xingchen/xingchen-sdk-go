@@ -2,8 +2,8 @@ package xingchen
 
 type ResultDTOChatResultDTO struct {
 	RequestId       *string        `json:"requestId,omitempty"`
-	Code            *int32         `json:"code,omitempty"`
-	ErrorMessage    *string        `json:"message,errorMessage,omitempty"`
+	Code            *int32         `json:"errorCode,omitempty"`
+	ErrorMessage    *string        `json:"errorMessage,omitempty"`
 	ErrorMessageKey *string        `json:"errorMessageKey,omitempty"`
 	Data            *ChatResultDTO `json:"data,omitempty"`
 	Success         *bool          `json:"success,omitempty"`

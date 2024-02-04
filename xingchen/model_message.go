@@ -19,11 +19,12 @@ var _ MappedNullable = &Message{}
 
 // Message struct for Message
 type Message struct {
-	Name                 *string `json:"name,omitempty"`
-	Role                 *string `json:"role,omitempty"`
-	Content              *string `json:"content,omitempty"`
-	FinishReason         *string `json:"finishReason,omitempty"`
-	Meta                 *Meta   `json:"meta,omitempty"`
+	Name                 *string       `json:"name,omitempty"`
+	Role                 *string       `json:"role,omitempty"`
+	Content              *string       `json:"content,omitempty"`
+	FinishReason         *string       `json:"finishReason,omitempty"`
+	Meta                 *Meta         `json:"meta,omitempty"`
+	FunctionCall         *FunctionCall `json:"functionCall,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -206,6 +207,29 @@ func (o *Message) SetMeta(v Meta) {
 	o.Meta = &v
 }
 
+// GetMetaOk returns a tuple with the Meta field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Message) GetFunctionCallOk() (*FunctionCall, bool) {
+	if o == nil || IsNil(o.Meta) {
+		return nil, false
+	}
+	return o.FunctionCall, true
+}
+
+// HasMeta returns a boolean if a field has been set.
+func (o *Message) HasFunctionCall() bool {
+	if o != nil && !IsNil(o.Meta) {
+		return true
+	}
+
+	return false
+}
+
+// SetMeta gets a reference to the given Meta and assigns it to the Meta field.
+func (o *Message) SetFunctionCall(v FunctionCall) {
+	o.FunctionCall = &v
+}
+
 func (o Message) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -230,6 +254,9 @@ func (o Message) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Meta) {
 		toSerialize["meta"] = o.Meta
+	}
+	if !IsNil(o.FunctionCall) {
+		toSerialize["functionCall"] = o.FunctionCall
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -258,6 +285,7 @@ func (o *Message) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "content")
 		delete(additionalProperties, "finishReason")
 		delete(additionalProperties, "meta")
+		delete(additionalProperties, "functionCall")
 		o.AdditionalProperties = additionalProperties
 	}
 
