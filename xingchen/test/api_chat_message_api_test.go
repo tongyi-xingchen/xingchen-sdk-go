@@ -97,4 +97,26 @@ func Test_xingchen_ChatMessageApiSubService(t *testing.T) {
 		}
 	})
 
+	t.Run("Test ChatMessageApiSubService ChatReset", func(t *testing.T) {
+
+		//t.Skip("skip test") // remove to run test
+
+		chatResetRequest := openapiclient.ChatResetRequest{
+			CharacterId: openapiclient.PtrString("b1697f1f00354fd8b7c3b2f61164e8a4"),
+			UserId:      openapiclient.PtrString("1704334671050516_tongyi"),
+		}
+
+		resp, httpRes, err := apiClient.ChatMessageApiSub.ChatReset(ctx).ChatResetRequest(chatResetRequest).Execute()
+
+		if err != nil {
+			t.Error()
+		}
+		if resp == nil {
+			t.Error()
+		}
+		if httpRes.StatusCode != 200 {
+			t.Error()
+		}
+	})
+
 }

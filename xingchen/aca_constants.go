@@ -31,6 +31,7 @@ var V2_PATH_ROUTE_MAP = map[string]string{
 	"/v2/api/chat/reminder":                   "aca-chat-reminder",
 	"/v2/api/chat/message/histories":          "aca-message-history",
 	"/v2/api/chat/rating":                     "aca-message-rating",
+	"/v2/api/chat/reset":                      "aca-chat-reset",
 	"/v2/api/character/create":                "aca-character-create",
 	"/v2/api/character/update":                "aca-character-update",
 	"/v2/api/character/createOrUpdateVersion": "aca-character-version-mgmt",

@@ -22,8 +22,8 @@ type Context struct {
 	ChatRoomId           *int64  `json:"chatRoomId,omitempty"`
 	SessionId            *string `json:"sessionId,omitempty"`
 	ChatId               *string `json:"chatId,omitempty"`
-	MessageId            *string `json:"messageId,omitempty"`
-	ReplyMessageId       *string `json:"replyMessageId,omitempty"`
+	AnswerId             *string `json:"messageId,omitempty"`
+	QueryId              *string `json:"replyMessageId,omitempty"`
 	EnableDataInspection *bool   `json:"enableDataInspection,omitempty"`
 	IsSave               *bool   `json:"isSave,omitempty"`
 	RequestId            *string `json:"requestId,omitempty"`
@@ -148,68 +148,68 @@ func (o *Context) SetChatId(v string) {
 	o.ChatId = &v
 }
 
-// GetMessageId returns the MessageId field value if set, zero value otherwise.
+// GetMessageId returns the AnswerId field value if set, zero value otherwise.
 func (o *Context) GetMessageId() string {
-	if o == nil || IsNil(o.MessageId) {
+	if o == nil || IsNil(o.AnswerId) {
 		var ret string
 		return ret
 	}
-	return *o.MessageId
+	return *o.AnswerId
 }
 
-// GetMessageIdOk returns a tuple with the MessageId field value if set, nil otherwise
+// GetMessageIdOk returns a tuple with the AnswerId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Context) GetMessageIdOk() (*string, bool) {
-	if o == nil || IsNil(o.MessageId) {
+	if o == nil || IsNil(o.AnswerId) {
 		return nil, false
 	}
-	return o.MessageId, true
+	return o.AnswerId, true
 }
 
 // HasMessageId returns a boolean if a field has been set.
 func (o *Context) HasMessageId() bool {
-	if o != nil && !IsNil(o.MessageId) {
+	if o != nil && !IsNil(o.AnswerId) {
 		return true
 	}
 
 	return false
 }
 
-// SetMessageId gets a reference to the given string and assigns it to the MessageId field.
+// SetMessageId gets a reference to the given string and assigns it to the AnswerId field.
 func (o *Context) SetMessageId(v string) {
-	o.MessageId = &v
+	o.AnswerId = &v
 }
 
-// GetReplyMessageId returns the ReplyMessageId field value if set, zero value otherwise.
+// GetReplyMessageId returns the QueryId field value if set, zero value otherwise.
 func (o *Context) GetReplyMessageId() string {
-	if o == nil || IsNil(o.ReplyMessageId) {
+	if o == nil || IsNil(o.QueryId) {
 		var ret string
 		return ret
 	}
-	return *o.ReplyMessageId
+	return *o.QueryId
 }
 
-// GetReplyMessageIdOk returns a tuple with the ReplyMessageId field value if set, nil otherwise
+// GetReplyMessageIdOk returns a tuple with the QueryId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Context) GetReplyMessageIdOk() (*string, bool) {
-	if o == nil || IsNil(o.ReplyMessageId) {
+	if o == nil || IsNil(o.QueryId) {
 		return nil, false
 	}
-	return o.ReplyMessageId, true
+	return o.QueryId, true
 }
 
 // HasReplyMessageId returns a boolean if a field has been set.
 func (o *Context) HasReplyMessageId() bool {
-	if o != nil && !IsNil(o.ReplyMessageId) {
+	if o != nil && !IsNil(o.QueryId) {
 		return true
 	}
 
 	return false
 }
 
-// SetReplyMessageId gets a reference to the given string and assigns it to the ReplyMessageId field.
+// SetReplyMessageId gets a reference to the given string and assigns it to the QueryId field.
 func (o *Context) SetReplyMessageId(v string) {
-	o.ReplyMessageId = &v
+	o.QueryId = &v
 }
 
 // GetEnableDataInspection returns the EnableDataInspection field value if set, zero value otherwise.
@@ -423,11 +423,11 @@ func (o Context) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ChatId) {
 		toSerialize["chatId"] = o.ChatId
 	}
-	if !IsNil(o.MessageId) {
-		toSerialize["messageId"] = o.MessageId
+	if !IsNil(o.AnswerId) {
+		toSerialize["messageId"] = o.AnswerId
 	}
-	if !IsNil(o.ReplyMessageId) {
-		toSerialize["replyMessageId"] = o.ReplyMessageId
+	if !IsNil(o.QueryId) {
+		toSerialize["replyMessageId"] = o.QueryId
 	}
 	if !IsNil(o.EnableDataInspection) {
 		toSerialize["enableDataInspection"] = o.EnableDataInspection

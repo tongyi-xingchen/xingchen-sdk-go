@@ -4,6 +4,7 @@ type Usage struct {
 	OutputTokens int32 `json:"outputTokens,omitempty"`
 	InputTokens  int32 `json:"inputTokens,omitempty"`
 	UserTokens   int32 `json:"userTokens,omitempty"`
+	PluginTokens int32 `json:"pluginTokens,omitempty"`
 }
 
 func (o *Usage) GetOutputTokens() int32 {
@@ -28,4 +29,12 @@ func (o *Usage) GetUserTokens() int32 {
 
 func (o *Usage) SetUserTokens(v int32) {
 	o.UserTokens = v
+}
+
+func (o *Usage) GetPluginTokens() int32 {
+	return o.PluginTokens
+}
+
+func (o *Usage) SetPluginTokens(v int32) {
+	o.PluginTokens = v
 }

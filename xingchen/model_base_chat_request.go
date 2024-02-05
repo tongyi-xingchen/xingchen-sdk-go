@@ -20,6 +20,7 @@ type AcaChatExtParam struct {
 	Scenario       *Scenario        `json:"scenario,omitempty"`
 	UserProfile    UserProfile      `json:"userProfile,omitempty"`
 	SampleMessages []ChatSampleItem `json:"sampleMessages,omitempty"`
+	Context        *ChatContext     `json:"context,omitempty"`
 	FunctionList   []Function       `json:"functionList,omitempty"`
 	FunctionChoice *FunctionChoice  `json:"functionChoice,omitempty"`
 }
