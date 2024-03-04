@@ -137,6 +137,9 @@ func buildChatReqParams() openapiclient.ChatReqParams {
 				Role:    openapiclient.PtrString("user"),
 			},
 		},
+		Context: &openapiclient.ChatContext{
+			UseChatHistory: false,
+		},
 	}
 	return chatReqParam
 }

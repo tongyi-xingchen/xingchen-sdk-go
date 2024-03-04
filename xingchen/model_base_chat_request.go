@@ -37,6 +37,7 @@ func chatReqParamsTOBaseChatRequest(params *ChatReqParams) *BaseChatRequest {
 				Scenario:       params.Scenario,
 				FunctionList:   params.FunctionList,
 				FunctionChoice: params.FunctionChoice,
+				Context:        params.Context,
 			},
 		},
 		Model:      params.ModelParameters.ModelName,

@@ -28,7 +28,7 @@ type ChatReqParams struct {
 	UserProfile          UserProfile          `json:"userProfile"`
 	Scenario             *Scenario            `json:"scenario,omitempty"`
 	Streaming            *bool                `json:"streaming,omitempty"`
-	Context              *Context             `json:"context,omitempty"`
+	Context              *ChatContext         `json:"context,omitempty"`
 	Source               *string              `json:"source,omitempty"`
 	FunctionList         []Function           `json:"function_list,omitempty"`
 	FunctionChoice       *FunctionChoice      `json:"function_choice,omitempty"`
@@ -322,9 +322,9 @@ func (o *ChatReqParams) SetStreaming(v bool) {
 }
 
 // GetContext returns the Context field value if set, zero value otherwise.
-func (o *ChatReqParams) GetContext() Context {
+func (o *ChatReqParams) GetContext() ChatContext {
 	if o == nil || IsNil(o.Context) {
-		var ret Context
+		var ret ChatContext
 		return ret
 	}
 	return *o.Context
@@ -332,7 +332,7 @@ func (o *ChatReqParams) GetContext() Context {
 
 // GetContextOk returns a tuple with the Context field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ChatReqParams) GetContextOk() (*Context, bool) {
+func (o *ChatReqParams) GetContextOk() (*ChatContext, bool) {
 	if o == nil || IsNil(o.Context) {
 		return nil, false
 	}
@@ -349,7 +349,7 @@ func (o *ChatReqParams) HasContext() bool {
 }
 
 // SetContext gets a reference to the given Context and assigns it to the Context field.
-func (o *ChatReqParams) SetContext(v Context) {
+func (o *ChatReqParams) SetContext(v ChatContext) {
 	o.Context = &v
 }
 
