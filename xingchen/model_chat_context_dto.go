@@ -1,8 +1,8 @@
 package xingchen
 
 type ChatContext struct {
-	UseChatHistory bool    `json:"useChatHistory,omitempty"`
-	IsRegenerate   bool    `json:"isRegenerate,omitempty"`
+	UseChatHistory bool    `json:"useChatHistory"`
+	IsRegenerate   bool    `json:"isRegenerate"`
 	QueryId        *string `json:"queryId,omitempty"`
 	AnswerId       *string `json:"answerId,omitempty"`
 }

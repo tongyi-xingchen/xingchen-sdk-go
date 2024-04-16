@@ -5,7 +5,7 @@ type BaseChatRequest struct {
 	Model       *string          `json:"model,omitempty"`
 	Parameters  *ModelParameters `json:"parameters,omitempty"`
 	Servicename *string          `json:"servicename,omitempty"`
-	Debug       bool             `json:"debug,omitempty"`
+	Debug       bool             `json:"debug"`
 	Streaming   *bool            `json:"streaming,omitempty"`
 }
 
