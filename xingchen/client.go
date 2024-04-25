@@ -53,6 +53,12 @@ type APIClient struct {
 	ChatApiSub *ChatApiSubService
 
 	ChatMessageApiSub *ChatMessageApiSubService
+
+	CommonApiSubService *CommonApiSubService
+
+	ChatExtractMessageApiSubService *ChatExtractMessageApiSubService
+
+	GroupChatApiSubService *GroupChatApiSubService
 }
 
 type service struct {
@@ -74,6 +80,9 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CharacterApiSub = (*CharacterApiSubService)(&c.common)
 	c.ChatApiSub = (*ChatApiSubService)(&c.common)
 	c.ChatMessageApiSub = (*ChatMessageApiSubService)(&c.common)
+	c.CommonApiSubService = (*CommonApiSubService)(&c.common)
+	c.ChatExtractMessageApiSubService = (*ChatExtractMessageApiSubService)(&c.common)
+	c.GroupChatApiSubService = (*GroupChatApiSubService)(&c.common)
 
 	return c
 }
@@ -435,9 +444,11 @@ func (c *APIClient) prepareRequest(
 }
 
 func getServiceRouteHeader(apiPath string, header http.Header) string {
-	if apiPath == CHAT_API {
-		if header.Get("X-DashScope-SSE") == "enable" {
-			return V2_PATH_ROUTE_MAP[apiPath] + "-sse"
+	if _, ok := CHAT_APIS[apiPath]; ok {
+		if sseHeaders, ok := header["X-AcA-SSE"]; ok {
+			if len(sseHeaders) > 0 && sseHeaders[0] == "enable" {
+				return V2_PATH_ROUTE_MAP[apiPath] + "-sse"
+			}
 		}
 	}
 	serviceRoute, ok := V2_PATH_ROUTE_MAP[apiPath]

@@ -36,7 +36,20 @@ type CharacterCreateDTO struct {
 	// 角色类型，virtual:虚拟角色，reproduction:已知角色复刻
 	Type *string `json:"type,omitempty"`
 	// 对话目标
-	ChatObjective        *string                    `json:"chatObjective,omitempty"`
+	ChatObjective *string `json:"chatObjective,omitempty"`
+	/**
+	 * 角色类型
+	 * 如 ["ACG", "accompany", "pet", "movie", "helper", "celebrity", "fun", "game", "other"]
+	 * accompany - 陪伴类
+	 * pet - 萌宠
+	 * movie - 影视
+	 * helper - 助手
+	 * celebrity - 名人
+	 * fun - 趣味
+	 * game - 文字游戏
+	 * other - 其他
+	 */
+	RoleTypes            []string                   `json:"roleTypes,omitempty"`
 	AdvancedConfig       *CharacterAdvancedConfig   `json:"advancedConfig,omitempty"`
 	PermConfig           *CharacterPermissionConfig `json:"permConfig,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -351,6 +364,37 @@ func (o *CharacterCreateDTO) HasChatObjective() bool {
 // SetChatObjective gets a reference to the given string and assigns it to the ChatObjective field.
 func (o *CharacterCreateDTO) SetChatObjective(v string) {
 	o.ChatObjective = &v
+}
+
+func (o *CharacterCreateDTO) GetRoleTypes() []string {
+	if o == nil || IsNil(o.RoleTypes) {
+		var ret []string
+		return ret
+	}
+	return o.RoleTypes
+}
+
+// GetRoleTypesOk returns a tuple with the RoleTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CharacterCreateDTO) GetRoleTypesOk() ([]string, bool) {
+	if o == nil || IsNil(o.RoleTypes) {
+		return nil, false
+	}
+	return o.RoleTypes, true
+}
+
+// HasRoleTypes returns a boolean if a field has been set.
+func (o *CharacterCreateDTO) HasRoleTypes() bool {
+	if o != nil && !IsNil(o.RoleTypes) {
+		return true
+	}
+
+	return false
+}
+
+// SetRoleTypes gets a reference to the given string and assigns it to the RoleTypes field.
+func (o *CharacterCreateDTO) SetRoleTypes(v []string) {
+	o.RoleTypes = v
 }
 
 // GetAdvancedConfig returns the AdvancedConfig field value if set, zero value otherwise.

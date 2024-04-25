@@ -21,6 +21,10 @@ var _ MappedNullable = &CharacterKey{}
 type CharacterKey struct {
 	CharacterId          *string `json:"characterId,omitempty"`
 	Version              *int32  `json:"version,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	Content              *string `json:"content,omitempty"`
+	Type                 *string `json:"type,omitempty"`
+	Traits               *string `json:"traits,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -107,6 +111,114 @@ func (o *CharacterKey) SetVersion(v int32) {
 	o.Version = &v
 }
 
+func (o *CharacterKey) GetName() string {
+	if o == nil || IsNil(o.Name) {
+		var ret string
+		return ret
+	}
+	return *o.Name
+}
+
+func (o *CharacterKey) GetNameOk() (*string, bool) {
+	if o == nil || IsNil(o.Name) {
+		return nil, false
+	}
+	return o.Name, true
+}
+
+func (o *CharacterKey) HasName() bool {
+	if o != nil && !IsNil(o.Name) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterKey) SetName(v string) {
+	o.Name = &v
+}
+
+func (o *CharacterKey) GetContent() string {
+	if o == nil || IsNil(o.Content) {
+		var ret string
+		return ret
+	}
+	return *o.Content
+}
+
+func (o *CharacterKey) GetContentOk() (*string, bool) {
+	if o == nil || IsNil(o.Content) {
+		return nil, false
+	}
+	return o.Content, true
+}
+
+func (o *CharacterKey) HasContent() bool {
+	if o != nil && !IsNil(o.Content) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterKey) SetContent(v string) {
+	o.Content = &v
+}
+
+func (o *CharacterKey) GetType() string {
+	if o == nil || IsNil(o.Type) {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+func (o *CharacterKey) GetTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.Type) {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+func (o *CharacterKey) HasType() bool {
+	if o != nil && !IsNil(o.Type) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterKey) SetType(v string) {
+	o.Type = &v
+}
+
+func (o *CharacterKey) GetTraits() string {
+	if o == nil || IsNil(o.Traits) {
+		var ret string
+		return ret
+	}
+	return *o.Traits
+}
+
+func (o *CharacterKey) GetTraitsOk() (*string, bool) {
+	if o == nil || IsNil(o.Traits) {
+		return nil, false
+	}
+	return o.Traits, true
+}
+
+func (o *CharacterKey) HasTraits() bool {
+	if o != nil && !IsNil(o.Traits) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterKey) SetTraits(v string) {
+	o.Traits = &v
+}
+
 func (o CharacterKey) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -122,6 +234,18 @@ func (o CharacterKey) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
+	}
+	if !IsNil(o.Name) {
+		toSerialize["name"] = o.Name
+	}
+	if !IsNil(o.Content) {
+		toSerialize["content"] = o.Content
+	}
+	if !IsNil(o.Type) {
+		toSerialize["type"] = o.Type
+	}
+	if !IsNil(o.Traits) {
+		toSerialize["traits"] = o.Traits
 	}
 
 	for key, value := range o.AdditionalProperties {

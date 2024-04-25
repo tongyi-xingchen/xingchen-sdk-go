@@ -24,6 +24,8 @@ type BotProfile struct {
 	Name                 *string `json:"name,omitempty"`
 	Content              *string `json:"content,omitempty"`
 	BotType              *string `json:"type,omitempty"`
+	Task                 *string `json:"task,omitempty"`
+	Traits               *string `json:"traits,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -201,6 +203,64 @@ func (o *BotProfile) SetBotType(v string) {
 	o.BotType = &v
 }
 
+func (o *BotProfile) GetTask() string {
+	if o == nil || IsNil(o.Task) {
+		var ret string
+		return ret
+	}
+	return *o.Task
+}
+
+func (o *BotProfile) GetTaskOk() (*string, bool) {
+	if o == nil || IsNil(o.Task) {
+		return nil, false
+	}
+	return o.Task, true
+}
+
+// HasCharacterId returns a boolean if a field has been set.
+func (o *BotProfile) HasTask() bool {
+	if o != nil && !IsNil(o.Task) {
+		return true
+	}
+
+	return false
+}
+
+// SetCharacterId gets a reference to the given string and assigns it to the CharacterId field.
+func (o *BotProfile) SetTask(v string) {
+	o.Task = &v
+}
+
+func (o *BotProfile) GetTraits() string {
+	if o == nil || IsNil(o.Traits) {
+		var ret string
+		return ret
+	}
+	return *o.Traits
+}
+
+func (o *BotProfile) GetTraitsOk() (*string, bool) {
+	if o == nil || IsNil(o.Traits) {
+		return nil, false
+	}
+	return o.Traits, true
+}
+
+// HasCharacterId returns a boolean if a field has been set.
+func (o *BotProfile) HasTraits() bool {
+	if o != nil && !IsNil(o.Traits) {
+		return true
+	}
+
+	return false
+}
+
+// SetCharacterId gets a reference to the given string and assigns it to the CharacterId field.
+func (o *BotProfile) SetTraits(v string) {
+	o.Traits = &v
+}
+
 func (o BotProfile) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -225,6 +285,12 @@ func (o BotProfile) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.BotType) {
 		toSerialize["type"] = o.BotType
+	}
+	if !IsNil(o.Task) {
+		toSerialize["task"] = o.Task
+	}
+	if !IsNil(o.Traits) {
+		toSerialize["Traits"] = o.Traits
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -253,6 +319,8 @@ func (o *BotProfile) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "content")
 		delete(additionalProperties, "type")
+		delete(additionalProperties, "task")
+		delete(additionalProperties, "traits")
 		o.AdditionalProperties = additionalProperties
 	}
 

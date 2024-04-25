@@ -32,6 +32,7 @@ type ChatReqParams struct {
 	Source               *string              `json:"source,omitempty"`
 	FunctionList         []Function           `json:"function_list,omitempty"`
 	FunctionChoice       *FunctionChoice      `json:"function_choice,omitempty"`
+	Memory               *Memory              `json:"memory,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -423,6 +424,37 @@ func (o *ChatReqParams) SetFunctionChoice(v *FunctionChoice) {
 	o.FunctionChoice = v
 }
 
+func (o *ChatReqParams) GetMemory() Memory {
+	if o == nil || IsNil(o.Memory) {
+		var ret Memory
+		return ret
+	}
+	return *o.Memory
+}
+
+// GetGatewayAddContentOk returns a tuple with the GatewayAddContent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ChatReqParams) GetMemoryOk() (*Memory, bool) {
+	if o == nil || IsNil(o.Memory) {
+		return nil, false
+	}
+	return o.Memory, true
+}
+
+// HasGatewayAddContent returns a boolean if a field has been set.
+func (o *ChatReqParams) HasMemory() bool {
+	if o != nil && !IsNil(o.Memory) {
+		return true
+	}
+
+	return false
+}
+
+// SetGatewayAddContent gets a reference to the given GatewayIssuedParams and assigns it to the GatewayAddContent field.
+func (o *ChatReqParams) SetMemory(v Memory) {
+	o.Memory = &v
+}
+
 func (o ChatReqParams) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -466,6 +498,9 @@ func (o ChatReqParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FunctionChoice) {
 		toSerialize["functionChoice"] = o.FunctionChoice
 	}
+	if !IsNil(o.Memory) {
+		toSerialize["memory"] = o.Memory
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -501,6 +536,7 @@ func (o *ChatReqParams) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "functionList")
 		delete(additionalProperties, "functionChoice")
+		delete(additionalProperties, "memory")
 		o.AdditionalProperties = additionalProperties
 	}
 

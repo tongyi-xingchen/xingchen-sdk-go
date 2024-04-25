@@ -43,6 +43,7 @@ type CharacterUpdateDTO struct {
 	// 角色版本
 	Version              int32                      `json:"version"`
 	PermConfig           *CharacterPermissionConfig `json:"permConfig,omitempty"`
+	RoleTypes            []string                   `json:"roleTypes,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -471,6 +472,26 @@ func (o *CharacterUpdateDTO) SetPermConfig(v CharacterPermissionConfig) {
 	o.PermConfig = &v
 }
 
+func (o *CharacterUpdateDTO) GetRoleTypes() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.RoleTypes
+}
+
+func (o *CharacterUpdateDTO) GetRoleTypesOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.RoleTypes, true
+}
+
+func (o *CharacterUpdateDTO) SetRoleTypes(v []string) {
+	o.RoleTypes = v
+}
+
 func (o CharacterUpdateDTO) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -511,6 +532,9 @@ func (o CharacterUpdateDTO) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PermConfig) {
 		toSerialize["permConfig"] = o.PermConfig
 	}
+	if !IsNil(o.RoleTypes) {
+		toSerialize["roleTypes"] = o.RoleTypes
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -547,6 +571,7 @@ func (o *CharacterUpdateDTO) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "characterId")
 		delete(additionalProperties, "version")
 		delete(additionalProperties, "permConfig")
+		delete(additionalProperties, "roleTypes")
 		o.AdditionalProperties = additionalProperties
 	}
 

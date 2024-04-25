@@ -23,6 +23,7 @@ type AcaChatExtParam struct {
 	Context        *ChatContext     `json:"context,omitempty"`
 	FunctionList   []Function       `json:"functionList,omitempty"`
 	FunctionChoice *FunctionChoice  `json:"functionChoice,omitempty"`
+	Memory         *Memory          `json:"memory,omitempty"`
 }
 
 func chatReqParamsTOBaseChatRequest(params *ChatReqParams) *BaseChatRequest {
@@ -38,6 +39,7 @@ func chatReqParamsTOBaseChatRequest(params *ChatReqParams) *BaseChatRequest {
 				FunctionList:   params.FunctionList,
 				FunctionChoice: params.FunctionChoice,
 				Context:        params.Context,
+				Memory:         params.Memory,
 			},
 		},
 		Model:      params.ModelParameters.ModelName,

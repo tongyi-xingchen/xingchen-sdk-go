@@ -70,7 +70,10 @@ type CharacterDTO struct {
 	// 是否抽取记忆
 	ExtractMemory *bool `json:"extractMemory,omitempty"`
 	// 是否抽取瞬间
-	ExtractMoment        *bool `json:"extractMoment,omitempty"`
+	ExtractMoment        *bool    `json:"extractMoment,omitempty"`
+	RoleTypes            []string `json:"roleTypes,omitempty"`
+	AuditStatus          *string  `json:"auditStatus,omitempty"`
+	ConfigStatus         *string  `json:"configStatus,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -961,6 +964,87 @@ func (o *CharacterDTO) SetExtractMoment(v bool) {
 	o.ExtractMoment = &v
 }
 
+func (o *CharacterDTO) GetRoleTypes() []string {
+	if o == nil || IsNil(o.RoleTypes) {
+		var ret []string
+		return ret
+	}
+	return o.RoleTypes
+}
+
+func (o *CharacterDTO) GetRoleTypesOk() ([]string, bool) {
+	if o == nil || IsNil(o.RoleTypes) {
+		return nil, false
+	}
+	return o.RoleTypes, true
+}
+
+func (o *CharacterDTO) HasRoleTypes() bool {
+	if o != nil && !IsNil(o.RoleTypes) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterDTO) SetRoleTypes(v []string) {
+	o.RoleTypes = v
+}
+
+func (o *CharacterDTO) GetAuditStatus() *string {
+	if o == nil || IsNil(o.AuditStatus) {
+		var ret *string
+		return ret
+	}
+	return o.AuditStatus
+}
+
+func (o *CharacterDTO) GetAuditStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.AuditStatus) {
+		return nil, false
+	}
+	return o.AuditStatus, true
+}
+
+func (o *CharacterDTO) HasAuditStatus() bool {
+	if o != nil && !IsNil(o.AuditStatus) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterDTO) SetAuditStatus(v *string) {
+	o.AuditStatus = v
+}
+
+func (o *CharacterDTO) GetConfigStatus() *string {
+	if o == nil || IsNil(o.ConfigStatus) {
+		var ret *string
+		return ret
+	}
+	return o.ConfigStatus
+}
+
+func (o *CharacterDTO) GetConfigStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.ConfigStatus) {
+		return nil, false
+	}
+	return o.ConfigStatus, true
+}
+
+func (o *CharacterDTO) HasConfigStatus() bool {
+	if o != nil && !IsNil(o.ConfigStatus) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterDTO) SetConfigStatus(v *string) {
+	o.ConfigStatus = v
+}
+
 func (o CharacterDTO) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -1047,6 +1131,15 @@ func (o CharacterDTO) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExtractMoment) {
 		toSerialize["extractMoment"] = o.ExtractMoment
 	}
+	if !IsNil(o.RoleTypes) {
+		toSerialize["roleTypes"] = o.RoleTypes
+	}
+	if !IsNil(o.AuditStatus) {
+		toSerialize["auditStatus"] = o.AuditStatus
+	}
+	if !IsNil(o.ConfigStatus) {
+		toSerialize["configStatus"] = o.ConfigStatus
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1097,6 +1190,9 @@ func (o *CharacterDTO) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "isPreConfigured")
 		delete(additionalProperties, "extractMemory")
 		delete(additionalProperties, "extractMoment")
+		delete(additionalProperties, "roleTypes")
+		delete(additionalProperties, "auditStatus")
+		delete(additionalProperties, "configStatus")
 		o.AdditionalProperties = additionalProperties
 	}
 

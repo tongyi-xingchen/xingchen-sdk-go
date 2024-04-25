@@ -5,6 +5,7 @@ type ChatContext struct {
 	IsRegenerate   bool    `json:"isRegenerate"`
 	QueryId        *string `json:"queryId,omitempty"`
 	AnswerId       *string `json:"answerId,omitempty"`
+	ResultCount    *int32  `json:"resultCount,omitempty"`
 }
 
 func (o *ChatContext) GetUseChatHistory() bool {
@@ -37,4 +38,12 @@ func (o *ChatContext) GetAnswerId() *string {
 
 func (o *ChatContext) SetAnswerId(v *string) {
 	o.AnswerId = v
+}
+
+func (o *ChatContext) GetResultCount() *int32 {
+	return o.ResultCount
+}
+
+func (o *ChatContext) SetResultCount(v *int32) {
+	o.ResultCount = v
 }

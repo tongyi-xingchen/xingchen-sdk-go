@@ -41,7 +41,8 @@ type CharacterVersionCreateOrUpdateDTO struct {
 	// 角色标识
 	CharacterId string `json:"characterId"`
 	// 角色版本，相同角色版本号唯一
-	Version              int32 `json:"version"`
+	Version              int32    `json:"version"`
+	RoleTypes            []string `json:"roleTypes,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -438,6 +439,26 @@ func (o *CharacterVersionCreateOrUpdateDTO) SetVersion(v int32) {
 	o.Version = v
 }
 
+func (o *CharacterVersionCreateOrUpdateDTO) GetRoleTypes() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.RoleTypes
+}
+
+func (o *CharacterVersionCreateOrUpdateDTO) GetRoleTypesOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.RoleTypes, true
+}
+
+func (o *CharacterVersionCreateOrUpdateDTO) SetRoleTypes(v []string) {
+	o.RoleTypes = v
+}
+
 func (o CharacterVersionCreateOrUpdateDTO) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -475,6 +496,9 @@ func (o CharacterVersionCreateOrUpdateDTO) ToMap() (map[string]interface{}, erro
 	}
 	toSerialize["characterId"] = o.CharacterId
 	toSerialize["version"] = o.Version
+	if !IsNil(o.RoleTypes) {
+		toSerialize["roleTypes"] = o.RoleTypes
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -510,6 +534,7 @@ func (o *CharacterVersionCreateOrUpdateDTO) UnmarshalJSON(bytes []byte) (err err
 		delete(additionalProperties, "advancedConfig")
 		delete(additionalProperties, "characterId")
 		delete(additionalProperties, "version")
+		delete(additionalProperties, "roleTypes")
 		o.AdditionalProperties = additionalProperties
 	}
 

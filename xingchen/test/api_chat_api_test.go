@@ -68,12 +68,35 @@ func Test_xingchen_ChatApiSubService(t *testing.T) {
 			fmt.Println(*resp.Data.Choices[0].Messages[0].Content)
 		}
 	})
+
+	t.Run("Test ChatApiSubService StopChat", func(t *testing.T) {
+
+		//t.Skip("skip test") // remove to run test
+
+		stopChatReq := openapiclient.StopChatRequest{
+			SessionId: openapiclient.PtrString("xxx"),
+			RequestId: openapiclient.PtrString("xxx"),
+			Content:   openapiclient.PtrString("测试终止对话"),
+		}
+
+		resp, httpRes, err := apiClient.ChatApiSub.StopChat(ctx).StopChatRequest(stopChatReq).Execute()
+
+		if err != nil {
+			t.Error()
+		}
+		if resp == nil {
+			t.Error()
+		}
+		if httpRes.StatusCode != 200 {
+			t.Error()
+		}
+	})
 }
 
 func buildChatReqParams() openapiclient.ChatReqParams {
 	chatReqParam := openapiclient.ChatReqParams{
 		BotProfile: openapiclient.BotProfile{
-			CharacterId: openapiclient.PtrString("e44ee5182dc3445d8400b5c628b39876"),
+			CharacterId: openapiclient.PtrString("xxx"),
 			Version:     openapiclient.PtrInt32(1),
 		},
 		ModelParameters: &openapiclient.ModelParameters{

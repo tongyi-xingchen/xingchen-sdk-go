@@ -19,6 +19,11 @@ func Test_xingchen_CharacterApiSubService(t *testing.T) {
 
 	configuration := openapiclient.NewConfiguration()
 	configuration.Version = openapiclient.V2
+	configuration.Servers = openapiclient.ServerConfigurations{
+		{
+			URL: "https://nlp.aliyuncs.com",
+		},
+	}
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	bearer := "xxx"
@@ -45,7 +50,86 @@ func Test_xingchen_CharacterApiSubService(t *testing.T) {
 
 		//t.Skip("skip test") // remove to run test
 
-		characterCreateDTO := openapiclient.CharacterCreateDTO{}
+		characterCreateDTO := openapiclient.CharacterCreateDTO{
+			Name: "画家",
+			Type: openapiclient.PtrString("virtual"),
+			Avatar: &openapiclient.FileInfoVO{
+				Filename: openapiclient.PtrString("关云长.png"),
+				FileUrl:  openapiclient.PtrString("https://ai-character.oss-cn-hangzhou.aliyuncs.com/img/guanyu.jpg"),
+			},
+			Traits:           openapiclient.PtrString("请在对话时尽可能的展现你的性格、感情， 用文言文回答， 并使用古人的语气和用词。"),
+			OpeningLine:      "您好，请问有什么可以帮您？",
+			BasicInformation: "你是一个画家，你能根据用户的需求，生成图片给到用户。",
+			ChatExample:      openapiclient.PtrString("{{user}}:敢问阁下尊姓大名。\\n{{char}}:吾姓关名羽，字长生，后改云长，河东解良人也。"),
+			AdvancedConfig: &openapiclient.CharacterAdvancedConfig{
+				IsRealTime:    openapiclient.PtrBool(true),
+				IsRealInfo:    openapiclient.PtrBool(true),
+				SearchKeyword: openapiclient.PtrString("关云长"),
+				LongTermMemories: []openapiclient.LongTermMemory{
+					{
+						Enabled:    openapiclient.PtrBool(true),
+						MemoryType: openapiclient.PtrString("summary"),
+					},
+					{
+						Enabled:    openapiclient.PtrBool(true),
+						MemoryType: openapiclient.PtrString("kv"),
+						KVMemoryConfigs: []openapiclient.KVMemoryConfig{
+							{
+								Enabled:    openapiclient.PtrBool(true),
+								MemoryText: openapiclient.PtrString("职业"),
+							},
+							{
+								Enabled:    openapiclient.PtrBool(true),
+								MemoryText: openapiclient.PtrString("喜欢"),
+							},
+							{
+								Enabled:    openapiclient.PtrBool(true),
+								MemoryText: openapiclient.PtrString("喜欢"),
+							},
+						},
+					},
+				},
+				PlatformPlugins: []interface{}{
+					*openapiclient.NewTextToImagePlugin(
+						openapiclient.PtrString("auto"),
+						openapiclient.PtrString("二次元,彩色"),
+						openapiclient.PtrString("多头多手指,多手多脚"),
+					),
+					*openapiclient.NewRejectAnswerPlugin(
+						[]openapiclient.RejectCondition{
+							{
+								Enabled:       openapiclient.PtrBool(true),
+								ConditionType: openapiclient.PtrString("reject_rule"),
+								Keywords: []openapiclient.Keyword{
+									{
+										Value: openapiclient.PtrString("test"),
+									},
+								},
+							},
+							{
+								Enabled:       openapiclient.PtrBool(true),
+								ConditionType: openapiclient.PtrString("knowledge_domain_rule"),
+								SubRejectCondition: &openapiclient.RejectCondition{
+									Enabled:       openapiclient.PtrBool(true),
+									ConditionType: openapiclient.PtrString("ancient"),
+									Keywords: []openapiclient.Keyword{
+										{
+											Value: openapiclient.PtrString("明朝"),
+										},
+									},
+								},
+							},
+						},
+					),
+				},
+			},
+			PermConfig: openapiclient.NewCharacterPermissionConfig(0, 0, 0),
+			RoleTypes: []string{
+				"ACG",
+				"accompany",
+				"movie",
+			},
+		}
 		resp, httpRes, err := apiClient.CharacterApiSub.Create(ctx).CharacterCreateDTO(characterCreateDTO).Execute()
 
 		if err != nil {
@@ -161,6 +245,32 @@ func Test_xingchen_CharacterApiSubService(t *testing.T) {
 
 		resp, httpRes, err := apiClient.CharacterApiSub.Delete(ctx).
 			CharacterId("xxx").Version(1).Execute()
+
+		if err != nil {
+			t.Error()
+		}
+		if resp == nil {
+			t.Error()
+		}
+		if httpRes.StatusCode != 200 {
+			t.Error()
+		}
+	})
+
+	t.Run("Test CharacterApiSubService CharacterDescGenerate", func(t *testing.T) {
+
+		//t.Skip("skip test") // remove to run test
+
+		req := openapiclient.CharacterDescGenerateRequest{
+			Type:     openapiclient.PtrString("file"),
+			FileName: openapiclient.PtrString("test.txt"),
+			FileUrl:  openapiclient.PtrString("https://lang.alicdn.com/xingchen/guanyu.txt"),
+			ModelParameters: &openapiclient.ModelParameters{
+				ModelName: openapiclient.PtrString("xingchen-base"),
+			},
+		}
+		resp, httpRes, err := apiClient.CharacterApiSub.CharacterDescGenerate(ctx).
+			CharacterDescGenerate(req).Execute()
 
 		if err != nil {
 			t.Error()

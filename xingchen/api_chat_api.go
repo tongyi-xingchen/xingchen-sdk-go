@@ -22,14 +22,20 @@ import (
 type ChatApiSubService service
 
 type ApiChatRequest struct {
-	ctx           context.Context
-	ApiService    *ChatApiSubService
-	chatReqParams *ChatReqParams
+	ctx            context.Context
+	ApiService     *ChatApiSubService
+	chatReqParams  *ChatReqParams
+	dataInspection *bool
 }
 
 // 对话请求
 func (r ApiChatRequest) ChatReqParams(chatReqParams ChatReqParams) ApiChatRequest {
 	r.chatReqParams = &chatReqParams
+	return r
+}
+
+func (r ApiChatRequest) DataInspection(dataInspection *bool) ApiChatRequest {
+	r.dataInspection = dataInspection
 	return r
 }
 
@@ -52,8 +58,9 @@ Chat 用户对话
 */
 func (a *ChatApiSubService) Chat(ctx context.Context) ApiChatRequest {
 	return ApiChatRequest{
-		ApiService: a,
-		ctx:        ctx,
+		ApiService:     a,
+		ctx:            ctx,
+		dataInspection: PtrBool(false),
 	}
 }
 
@@ -145,8 +152,10 @@ func (a *ChatApiSubService) call(r ApiChatRequest) (*http.Response, error) {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	if r.chatReqParams.Streaming != nil && *r.chatReqParams.Streaming {
-		localVarHeaderParams["X-DashScope-DataInspection"] = "disable"
-		localVarHeaderParams["X-DashScope-SSE"] = "enable"
+		localVarHeaderParams["X-AcA-SSE"] = "enable"
+	}
+	if *r.dataInspection {
+		localVarHeaderParams["X-AcA-DataInspection"] = "enable"
 	}
 
 	// body params
@@ -163,4 +172,105 @@ func (a *ChatApiSubService) call(r ApiChatRequest) (*http.Response, error) {
 	localVarHTTPResponse, err := a.client.callAPI(req)
 
 	return localVarHTTPResponse, err
+}
+
+type ApiStopChatRequest struct {
+	ctx             context.Context
+	ApiService      *ChatApiSubService
+	stopChatRequest *StopChatRequest
+}
+
+func (r ApiStopChatRequest) StopChatRequest(stopChatRequest StopChatRequest) ApiStopChatRequest {
+	r.stopChatRequest = &stopChatRequest
+	return r
+}
+
+func (r ApiStopChatRequest) Execute() (*ResultDTOBoolean, *http.Response, error) {
+	return r.ApiService.StopChatExecute(r)
+}
+
+func (a *ChatApiSubService) StopChat(ctx context.Context) ApiStopChatRequest {
+	return ApiStopChatRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+func (a *ChatApiSubService) StopChatExecute(r ApiStopChatRequest) (*ResultDTOBoolean, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ResultDTOBoolean
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ChatApiSubService.StopChat")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/chat/stop"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.StopChatRequest == nil {
+		return localVarReturnValue, nil, reportError("StopChatRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"*/*"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+
+	localVarPostBody = r.stopChatRequest
+
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }

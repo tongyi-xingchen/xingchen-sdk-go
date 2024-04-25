@@ -25,6 +25,7 @@ type CharacterAdvancedConfig struct {
 	IsRealInfo *bool `json:"isRealInfo,omitempty"`
 	// web搜索必填关键字
 	SearchKeyword *string `json:"searchKeyword,omitempty"`
+	IsRealTime    *bool   `json:"isRealTime,omitempty"`
 	// 是否允许角色发送图片
 	AllowSendImage *bool `json:"allowSendImage,omitempty"`
 	// 角色发送图片的风格
@@ -34,7 +35,10 @@ type CharacterAdvancedConfig struct {
 	// 角色发送语音风格
 	AsrStyle *string `json:"asrStyle,omitempty"`
 	// 对话介绍
-	ChatDescription      *string `json:"chatDescription,omitempty"`
+	ChatDescription      *string          `json:"chatDescription,omitempty"`
+	ShortTermMemoryRound *int32           `json:"shortTermMemoryRound,omitempty"`
+	LongTermMemories     []LongTermMemory `json:"longTermMemories,omitempty"`
+	PlatformPlugins      []interface{}    `json:"platformPlugins,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -183,6 +187,33 @@ func (o *CharacterAdvancedConfig) HasSearchKeyword() bool {
 // SetSearchKeyword gets a reference to the given string and assigns it to the SearchKeyword field.
 func (o *CharacterAdvancedConfig) SetSearchKeyword(v string) {
 	o.SearchKeyword = &v
+}
+
+func (o *CharacterAdvancedConfig) GetIsRealTime() *bool {
+	if o == nil || IsNil(o.IsRealTime) {
+		var ret *bool
+		return ret
+	}
+	return o.IsRealTime
+}
+
+func (o *CharacterAdvancedConfig) GetIsRealTimeOk() (*bool, bool) {
+	if o == nil || IsNil(o.IsRealTime) {
+		return nil, false
+	}
+	return o.IsRealTime, true
+}
+
+func (o *CharacterAdvancedConfig) HasIsRealTime() bool {
+	if o != nil && !IsNil(o.IsRealTime) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterAdvancedConfig) SetIsRealTime(v *bool) {
+	o.IsRealTime = v
 }
 
 // GetAllowSendImage returns the AllowSendImage field value if set, zero value otherwise.
@@ -345,6 +376,87 @@ func (o *CharacterAdvancedConfig) SetChatDescription(v string) {
 	o.ChatDescription = &v
 }
 
+func (o *CharacterAdvancedConfig) GetShortTermMemoryRound() int32 {
+	if o == nil || IsNil(o.ShortTermMemoryRound) {
+		var ret int32
+		return ret
+	}
+	return *o.ShortTermMemoryRound
+}
+
+func (o *CharacterAdvancedConfig) GetShortTermMemoryRoundOk() (*int32, bool) {
+	if o == nil || IsNil(o.ShortTermMemoryRound) {
+		return nil, false
+	}
+	return o.ShortTermMemoryRound, true
+}
+
+func (o *CharacterAdvancedConfig) HasShortTermMemoryRound() bool {
+	if o != nil && !IsNil(o.ShortTermMemoryRound) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterAdvancedConfig) SetShortTermMemoryRound(v int32) {
+	o.ShortTermMemoryRound = &v
+}
+
+func (o *CharacterAdvancedConfig) GetLongTermMemories() []LongTermMemory {
+	if o == nil || IsNil(o.LongTermMemories) {
+		var ret []LongTermMemory
+		return ret
+	}
+	return o.LongTermMemories
+}
+
+func (o *CharacterAdvancedConfig) GetLongTermMemoriesOk() ([]LongTermMemory, bool) {
+	if o == nil || IsNil(o.LongTermMemories) {
+		return nil, false
+	}
+	return o.LongTermMemories, true
+}
+
+func (o *CharacterAdvancedConfig) HasLongTermMemories() bool {
+	if o != nil && !IsNil(o.LongTermMemories) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterAdvancedConfig) SetLongTermMemories(v []LongTermMemory) {
+	o.LongTermMemories = v
+}
+
+func (o *CharacterAdvancedConfig) GetPlatformPlugins() []interface{} {
+	if o == nil || IsNil(o.PlatformPlugins) {
+		var ret []interface{}
+		return ret
+	}
+	return o.PlatformPlugins
+}
+
+func (o *CharacterAdvancedConfig) GetPlatformPluginsOk() ([]interface{}, bool) {
+	if o == nil || IsNil(o.PlatformPlugins) {
+		return nil, false
+	}
+	return o.PlatformPlugins, true
+}
+
+func (o *CharacterAdvancedConfig) HasPlatformPlugins() bool {
+	if o != nil && !IsNil(o.PlatformPlugins) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterAdvancedConfig) SetPlatformPlugins(v []interface{}) {
+	o.PlatformPlugins = v
+}
+
 func (o CharacterAdvancedConfig) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -367,6 +479,9 @@ func (o CharacterAdvancedConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SearchKeyword) {
 		toSerialize["searchKeyword"] = o.SearchKeyword
 	}
+	if !IsNil(o.IsRealTime) {
+		toSerialize["isRealTime"] = o.IsRealTime
+	}
 	if !IsNil(o.AllowSendImage) {
 		toSerialize["allowSendImage"] = o.AllowSendImage
 	}
@@ -381,6 +496,15 @@ func (o CharacterAdvancedConfig) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ChatDescription) {
 		toSerialize["chatDescription"] = o.ChatDescription
+	}
+	if !IsNil(o.ShortTermMemoryRound) {
+		toSerialize["shortTermMemoryRound"] = o.ShortTermMemoryRound
+	}
+	if !IsNil(o.LongTermMemories) {
+		toSerialize["longTermMemories"] = o.LongTermMemories
+	}
+	if !IsNil(o.PlatformPlugins) {
+		toSerialize["platformPlugins"] = o.PlatformPlugins
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -408,11 +532,15 @@ func (o *CharacterAdvancedConfig) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "repositoryInfo")
 		delete(additionalProperties, "isRealInfo")
 		delete(additionalProperties, "searchKeyword")
+		delete(additionalProperties, "isRealTime")
 		delete(additionalProperties, "allowSendImage")
 		delete(additionalProperties, "imageStyle")
 		delete(additionalProperties, "allowSendAsr")
 		delete(additionalProperties, "asrStyle")
 		delete(additionalProperties, "chatDescription")
+		delete(additionalProperties, "shortTermMemoryRound")
+		delete(additionalProperties, "longTermMemories")
+		delete(additionalProperties, "platformPlugins")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -23,12 +23,17 @@ const (
 	DEFAULT_V2_BASE_PATH = "https://nlp.aliyuncs.com"
 )
 
-const CHAT_API = "v2/api/chat/send"
+var CHAT_APIS = map[string]struct{}{
+	"/v2/api/chat/send":      {},
+	"/v2/api/groupchat/send": {},
+}
 
 var V2_PATH_ROUTE_MAP = map[string]string{
 	"/v2/api/chat/send":                       "aca-chat-send",
 	"/v2/api/chat/generate":                   "aca-chat-regenerate",
 	"/v2/api/chat/reminder":                   "aca-chat-reminder",
+	"/v2/api/chat/stop":                       "aca-chat-stop",
+	"/v2/api/groupchat/send":                  "aca-groupchat-send",
 	"/v2/api/chat/message/histories":          "aca-message-history",
 	"/v2/api/chat/rating":                     "aca-message-rating",
 	"/v2/api/chat/reset":                      "aca-chat-reset",
@@ -40,4 +45,10 @@ var V2_PATH_ROUTE_MAP = map[string]string{
 	"/v2/api/character/delete":                "aca-character-delete",
 	"/v2/api/character/search":                "aca-character-search",
 	"/v2/api/character/versions":              "aca-character-versions",
+	"/v2/api/common/file/asyn/upload":         "aca-doc-converter-submit",
+	"/v2/api/common/file/asyn/download":       "aca-doc-converter-result",
+	"/v2/api/chat/polling/image":              "aca-polling-image",
+	"/v2/api/extract/summary":                 "aca-extract-memory-summary",
+	"/v2/api/extract/kv":                      "aca-extract-memory-kv",
+	"/v2/api/character/auto/desc":             "aca-char-auto-desc",
 }
