@@ -142,6 +142,7 @@ func (a *GroupChatApiSubService) call(r ApiGroupChatRequest) (*http.Response, er
 	}
 	if r.chatReqParams.Streaming != nil && *r.chatReqParams.Streaming {
 		localVarHeaderParams["X-AcA-SSE"] = "enable"
+		localVarHeaderParams["Accept"] = "text/event-stream"
 	}
 	if *r.dataInspection {
 		localVarHeaderParams["X-AcA-DataInspection"] = "enable"
