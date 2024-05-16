@@ -66,6 +66,7 @@ func Test_xingchen_ChatApiSubService(t *testing.T) {
 				t.Fatal()
 			}
 			fmt.Println(*resp.Data.Choices[0].Messages[0].Content)
+			fmt.Println(*resp.Data.RequestId)
 		}
 	})
 

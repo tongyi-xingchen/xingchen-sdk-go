@@ -16,14 +16,16 @@ type Input struct {
 }
 
 type AcaChatExtParam struct {
-	BotProfile     BotProfile       `json:"botProfile,omitempty"`
-	Scenario       *Scenario        `json:"scenario,omitempty"`
-	UserProfile    UserProfile      `json:"userProfile,omitempty"`
-	SampleMessages []ChatSampleItem `json:"sampleMessages,omitempty"`
-	Context        *ChatContext     `json:"context,omitempty"`
-	FunctionList   []Function       `json:"functionList,omitempty"`
-	FunctionChoice *FunctionChoice  `json:"functionChoice,omitempty"`
-	Memory         *Memory          `json:"memory,omitempty"`
+	BotProfile       BotProfile        `json:"botProfile,omitempty"`
+	Scenario         *Scenario         `json:"scenario,omitempty"`
+	UserProfile      UserProfile       `json:"userProfile,omitempty"`
+	SampleMessages   []ChatSampleItem  `json:"sampleMessages,omitempty"`
+	Context          *ChatContext      `json:"context,omitempty"`
+	FunctionList     []Function        `json:"functionList,omitempty"`
+	FunctionChoice   *FunctionChoice   `json:"functionChoice,omitempty"`
+	Memory           *Memory           `json:"memory,omitempty"`
+	PlatformPlugins  []interface{}     `json:"platformPlugins,omitempty"`
+	AdvancedSettings *AdvancedSettings `json:"advancedSettings,omitempty"`
 }
 
 func chatReqParamsTOBaseChatRequest(params *ChatReqParams) *BaseChatRequest {
@@ -32,14 +34,16 @@ func chatReqParamsTOBaseChatRequest(params *ChatReqParams) *BaseChatRequest {
 			Prompt:   PtrString("<|system|>"),
 			Messages: params.Messages,
 			Aca: AcaChatExtParam{
-				BotProfile:     params.BotProfile,
-				UserProfile:    params.UserProfile,
-				SampleMessages: params.ChatSamples,
-				Scenario:       params.Scenario,
-				FunctionList:   params.FunctionList,
-				FunctionChoice: params.FunctionChoice,
-				Context:        params.Context,
-				Memory:         params.Memory,
+				BotProfile:       params.BotProfile,
+				UserProfile:      params.UserProfile,
+				SampleMessages:   params.ChatSamples,
+				Scenario:         params.Scenario,
+				FunctionList:     params.FunctionList,
+				FunctionChoice:   params.FunctionChoice,
+				Context:          params.Context,
+				Memory:           params.Memory,
+				PlatformPlugins:  params.PlatformPlugins,
+				AdvancedSettings: params.AdvancedSettings,
 			},
 		},
 		Model:      params.ModelParameters.ModelName,

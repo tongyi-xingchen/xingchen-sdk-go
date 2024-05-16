@@ -33,6 +33,7 @@ type ChatReqParams struct {
 	FunctionList         []Function           `json:"function_list,omitempty"`
 	FunctionChoice       *FunctionChoice      `json:"function_choice,omitempty"`
 	Memory               *Memory              `json:"memory,omitempty"`
+	PlatformPlugins      []interface{}        `json:"platformPlugins,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -432,8 +433,6 @@ func (o *ChatReqParams) GetMemory() Memory {
 	return *o.Memory
 }
 
-// GetGatewayAddContentOk returns a tuple with the GatewayAddContent field value if set, nil otherwise
-// and a boolean to check if the value has been set.
 func (o *ChatReqParams) GetMemoryOk() (*Memory, bool) {
 	if o == nil || IsNil(o.Memory) {
 		return nil, false
@@ -441,7 +440,6 @@ func (o *ChatReqParams) GetMemoryOk() (*Memory, bool) {
 	return o.Memory, true
 }
 
-// HasGatewayAddContent returns a boolean if a field has been set.
 func (o *ChatReqParams) HasMemory() bool {
 	if o != nil && !IsNil(o.Memory) {
 		return true
@@ -450,9 +448,35 @@ func (o *ChatReqParams) HasMemory() bool {
 	return false
 }
 
-// SetGatewayAddContent gets a reference to the given GatewayIssuedParams and assigns it to the GatewayAddContent field.
 func (o *ChatReqParams) SetMemory(v Memory) {
 	o.Memory = &v
+}
+
+func (o *ChatReqParams) GetPlatformPlugins() []interface{} {
+	if o == nil || IsNil(o.PlatformPlugins) {
+		var ret []interface{}
+		return ret
+	}
+	return o.PlatformPlugins
+}
+
+func (o *ChatReqParams) GetPlatformPluginsOk() ([]interface{}, bool) {
+	if o == nil || IsNil(o.PlatformPlugins) {
+		return nil, false
+	}
+	return o.PlatformPlugins, true
+}
+
+func (o *ChatReqParams) HasPlatformPlugins() bool {
+	if o != nil && !IsNil(o.PlatformPlugins) {
+		return true
+	}
+
+	return false
+}
+
+func (o *ChatReqParams) SetPlatformPlugins(v []interface{}) {
+	o.PlatformPlugins = v
 }
 
 func (o ChatReqParams) MarshalJSON() ([]byte, error) {
@@ -501,6 +525,9 @@ func (o ChatReqParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Memory) {
 		toSerialize["memory"] = o.Memory
 	}
+	if !IsNil(o.PlatformPlugins) {
+		toSerialize["platformPlugins"] = o.PlatformPlugins
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -537,6 +564,7 @@ func (o *ChatReqParams) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "functionList")
 		delete(additionalProperties, "functionChoice")
 		delete(additionalProperties, "memory")
+		delete(additionalProperties, "platformPlugins")
 		o.AdditionalProperties = additionalProperties
 	}
 

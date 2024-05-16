@@ -120,6 +120,11 @@ func (a *ChatApiSubService) call(r ApiChatRequest) (*http.Response, error) {
 		formFiles          []formFile
 	)
 
+	err := checkPlugins(r.chatReqParams.PlatformPlugins)
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ChatApiSubService.Chat")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
