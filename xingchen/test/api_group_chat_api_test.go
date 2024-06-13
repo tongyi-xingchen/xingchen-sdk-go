@@ -34,7 +34,7 @@ func Test_xingchen_GroupChatApiSubService(t *testing.T) {
 		}
 	})
 
-	t.Run("Test ChatApiSubService stream Chat", func(t *testing.T) {
+	t.Run("Test GroupChatApiSubService stream Chat", func(t *testing.T) {
 
 		//t.Skip("skip test") // remove to run test
 
@@ -56,6 +56,21 @@ func Test_xingchen_GroupChatApiSubService(t *testing.T) {
 				t.Fatal()
 			}
 			fmt.Println(*resp.Data.Choices[0].Messages[0].Content)
+		}
+	})
+
+	t.Run("Test GroupChatApiSubService GetNextSpeaker", func(t *testing.T) {
+		chatReqParams := buildGroupChatParams()
+		resp, httpRes, err := apiClient.GroupChatApiSubService.GetNextSpeaker(ctx).ChatReqParams(chatReqParams).Execute()
+
+		if err != nil {
+			t.Error()
+		}
+		if resp == nil {
+			t.Error()
+		}
+		if httpRes.StatusCode != 200 {
+			t.Error()
 		}
 	})
 }

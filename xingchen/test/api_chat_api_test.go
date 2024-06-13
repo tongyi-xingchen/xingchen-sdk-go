@@ -70,6 +70,29 @@ func Test_xingchen_ChatApiSubService(t *testing.T) {
 		}
 	})
 
+	t.Run("Test ChatApiSubService Custom Chat", func(t *testing.T) {
+		chatReqParams := buildCustomChatReqParams()
+		chatReqParams.Streaming = openapiclient.PtrBool(true)
+		chatResultStream, err := apiClient.ChatApiSub.Chat(ctx).ChatReqParams(chatReqParams).StreamExecute()
+
+		if err != nil {
+			t.Error()
+		}
+
+		defer chatResultStream.Close()
+		for {
+			resp, err := chatResultStream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if *resp.Code != int32(200) {
+				t.Fatal()
+			}
+			fmt.Println(*resp.Data.Choices[0].Messages[0].Content)
+			fmt.Println(*resp.Data.RequestId)
+		}
+	})
+
 	t.Run("Test ChatApiSubService StopChat", func(t *testing.T) {
 
 		//t.Skip("skip test") // remove to run test
@@ -163,6 +186,155 @@ func buildChatReqParams() openapiclient.ChatReqParams {
 		},
 		Context: &openapiclient.ChatContext{
 			UseChatHistory: false,
+		},
+	}
+	return chatReqParam
+}
+
+func buildCustomChatReqParams() openapiclient.ChatReqParams {
+	chatReqParam := openapiclient.ChatReqParams{
+		BotProfile: openapiclient.BotProfile{
+			Name:    openapiclient.PtrString("小婉"),
+			Content: openapiclient.PtrString("【你的人设】\\n"),
+		},
+		ModelParameters: &openapiclient.ModelParameters{
+			Seed:              openapiclient.PtrInt64(1683806810),
+			TopP:              openapiclient.PtrFloat64(0.8),
+			Temperature:       openapiclient.PtrFloat64(0.8),
+			IncrementalOutput: openapiclient.PtrBool(false),
+		},
+		UserProfile: openapiclient.UserProfile{
+			UserId: "1234",
+		},
+		ChatSamples: []openapiclient.ChatSampleItem{
+			{
+				Name:    openapiclient.PtrString("小明"),
+				Role:    openapiclient.PtrString("user"),
+				Content: openapiclient.PtrString("你在干嘛啊"),
+			},
+			{
+				Name:    openapiclient.PtrString("小婉"),
+				Role:    openapiclient.PtrString("assistant"),
+				Content: openapiclient.PtrString("在想你啊～[[想你]] 你呢？"),
+			},
+			{
+				Name:    openapiclient.PtrString("小明"),
+				Role:    openapiclient.PtrString("user"),
+				Content: openapiclient.PtrString("我在吃饭呢"),
+			},
+			{
+				Name:    openapiclient.PtrString("小婉"),
+				Role:    openapiclient.PtrString("assistant"),
+				Content: openapiclient.PtrString("我也是！你看我在吃沙拉～"),
+			},
+		},
+		Messages: []openapiclient.Message{
+			{
+				Name:    openapiclient.PtrString("小明"),
+				Content: openapiclient.PtrString("你叫什么名字"),
+				Role:    openapiclient.PtrString("user"),
+			},
+			{
+				Name:    openapiclient.PtrString("小婉"),
+				Content: openapiclient.PtrString("我叫小婉啊"),
+				Role:    openapiclient.PtrString("assistant"),
+			},
+			{
+				Name:    openapiclient.PtrString("小明"),
+				Content: openapiclient.PtrString("你今年多大"),
+				Role:    openapiclient.PtrString("user"),
+			},
+			{
+				Name:    openapiclient.PtrString("小婉"),
+				Content: openapiclient.PtrString("我今年17岁了"),
+				Role:    openapiclient.PtrString("assistant"),
+			},
+			{
+				Name:    openapiclient.PtrString("小明"),
+				Content: openapiclient.PtrString("你今年多大"),
+				Role:    openapiclient.PtrString("user"),
+			},
+		},
+		AdvancedSettings: &openapiclient.AdvancedSettings{
+			KnowledgeBases: []string{
+				"19e74c54fcd849eb8eaa220700fd0138",
+			},
+			EnableWebSearch:       openapiclient.PtrBool(true),
+			SearchEnhancedKeyword: openapiclient.PtrString("开启网络搜索关键字"),
+		},
+		Memory: &openapiclient.Memory{
+			Summaries: []string{
+				"user和assistant计划一起去打篮球",
+			},
+			Originals: []openapiclient.Message{
+				{
+					Name:    openapiclient.PtrString("小明"),
+					Role:    openapiclient.PtrString("user"),
+					Content: openapiclient.PtrString("你叫什么名字"),
+				},
+				{
+					Name:    openapiclient.PtrString("小婉"),
+					Role:    openapiclient.PtrString("assistant"),
+					Content: openapiclient.PtrString("我叫小婉啊"),
+				},
+			},
+			Tags: []openapiclient.MemorySchema{
+				{
+					Role: openapiclient.PtrString("user"),
+					Key:  openapiclient.PtrString("职业"),
+					Value: []string{
+						"武术家",
+					},
+				},
+				{
+					Role: openapiclient.PtrString("assistant"),
+					Key:  openapiclient.PtrString("喜欢"),
+					Value: []string{
+						"武术",
+					},
+				},
+			},
+		},
+		PlatformPlugins: []interface{}{
+			*openapiclient.NewRejectAnswerPlugin(
+				[]openapiclient.RejectCondition{
+					{
+						Enabled:       openapiclient.PtrBool(true),
+						ConditionType: openapiclient.PtrString("reject_rule"),
+						Keywords: []openapiclient.Keyword{
+							{
+								Value: openapiclient.PtrString("政治"),
+							},
+							{
+								Value: openapiclient.PtrString("宗教"),
+							},
+							{
+								Value: openapiclient.PtrString("敏感事件"),
+							},
+						},
+					},
+					{
+						Enabled:       openapiclient.PtrBool(true),
+						ConditionType: openapiclient.PtrString("passive_rule"),
+						Keywords: []openapiclient.Keyword{
+							{
+								Value: openapiclient.PtrString("年龄"),
+							},
+						},
+					},
+					{
+						Enabled:       openapiclient.PtrBool(true),
+						ConditionType: openapiclient.PtrString("knowledge_domain_rule"),
+						SubRejectCondition: &openapiclient.RejectCondition{
+							ConditionType: openapiclient.PtrString("ancient"),
+							Keywords: []openapiclient.Keyword{
+								{
+									Value: openapiclient.PtrString("古代"),
+								},
+							},
+						},
+					},
+				}),
 		},
 	}
 	return chatReqParam

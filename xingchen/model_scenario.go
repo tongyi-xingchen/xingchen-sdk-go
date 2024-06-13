@@ -23,6 +23,7 @@ type Scenario struct {
 	Topics       []string `json:"topics,omitempty"`
 	UserTags     []string `json:"userTags,omitempty"`
 	SafetyPrompt *string  `json:"safetyPrompt,omitempty"`
+	IsRealTime   *bool    `json:"isRealTime,omitempty"`
 
 	AdditionalProperties map[string]interface{}
 }
@@ -169,6 +170,33 @@ func (o *Scenario) SetSafetyPrompt(v string) {
 	o.SafetyPrompt = &v
 }
 
+func (o *Scenario) GetIsRealTime() bool {
+	if o == nil || IsNil(o.IsRealTime) {
+		var ret bool
+		return ret
+	}
+	return *o.IsRealTime
+}
+
+func (o *Scenario) GetIsRealTimeOk() (*bool, bool) {
+	if o == nil || IsNil(o.IsRealTime) {
+		return nil, false
+	}
+	return o.IsRealTime, true
+}
+
+func (o *Scenario) HasIsRealTime() bool {
+	if o != nil && !IsNil(o.IsRealTime) {
+		return true
+	}
+
+	return false
+}
+
+func (o *Scenario) SetIsRealTime(v bool) {
+	o.IsRealTime = &v
+}
+
 func (o Scenario) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -190,6 +218,9 @@ func (o Scenario) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SafetyPrompt) {
 		toSerialize["safetyPrompt"] = o.SafetyPrompt
+	}
+	if !IsNil(o.IsRealTime) {
+		toSerialize["isRealTime"] = o.IsRealTime
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -217,6 +248,7 @@ func (o *Scenario) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "topics")
 		delete(additionalProperties, "userTags")
 		delete(additionalProperties, "safetyPrompt")
+		delete(additionalProperties, "isRealTime")
 		o.AdditionalProperties = additionalProperties
 	}
 

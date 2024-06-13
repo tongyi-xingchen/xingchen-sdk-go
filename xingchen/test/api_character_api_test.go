@@ -62,6 +62,9 @@ func Test_xingchen_CharacterApiSubService(t *testing.T) {
 			BasicInformation: "你是一个画家，你能根据用户的需求，生成图片给到用户。",
 			ChatExample:      openapiclient.PtrString("{{user}}:敢问阁下尊姓大名。\\n{{char}}:吾姓关名羽，字长生，后改云长，河东解良人也。"),
 			AdvancedConfig: &openapiclient.CharacterAdvancedConfig{
+				KnowledgeBases: []string{
+					"xxx",
+				},
 				IsRealTime:    openapiclient.PtrBool(true),
 				IsRealInfo:    openapiclient.PtrBool(true),
 				SearchKeyword: openapiclient.PtrString("关云长"),

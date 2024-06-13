@@ -39,6 +39,7 @@ type CharacterAdvancedConfig struct {
 	ShortTermMemoryRound *int32           `json:"shortTermMemoryRound,omitempty"`
 	LongTermMemories     []LongTermMemory `json:"longTermMemories,omitempty"`
 	PlatformPlugins      []interface{}    `json:"platformPlugins,omitempty"`
+	KnowledgeBases       []string         `json:"KnowledgeBases,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -457,6 +458,33 @@ func (o *CharacterAdvancedConfig) SetPlatformPlugins(v []interface{}) {
 	o.PlatformPlugins = v
 }
 
+func (o *CharacterAdvancedConfig) GetKnowledgeBases() []string {
+	if o == nil || IsNil(o.KnowledgeBases) {
+		var ret []string
+		return ret
+	}
+	return o.KnowledgeBases
+}
+
+func (o *CharacterAdvancedConfig) GetKnowledgeBasesOk() ([]string, bool) {
+	if o == nil || IsNil(o.KnowledgeBases) {
+		return nil, false
+	}
+	return o.KnowledgeBases, true
+}
+
+func (o *CharacterAdvancedConfig) HasKnowledgeBases() bool {
+	if o != nil && !IsNil(o.KnowledgeBases) {
+		return true
+	}
+
+	return false
+}
+
+func (o *CharacterAdvancedConfig) SetKnowledgeBases(v []string) {
+	o.KnowledgeBases = v
+}
+
 func (o CharacterAdvancedConfig) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -506,6 +534,9 @@ func (o CharacterAdvancedConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PlatformPlugins) {
 		toSerialize["platformPlugins"] = o.PlatformPlugins
 	}
+	if !IsNil(o.KnowledgeBases) {
+		toSerialize["knowledgeBases"] = o.KnowledgeBases
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -541,6 +572,7 @@ func (o *CharacterAdvancedConfig) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "shortTermMemoryRound")
 		delete(additionalProperties, "longTermMemories")
 		delete(additionalProperties, "platformPlugins")
+		delete(additionalProperties, "knowledgeBases")
 		o.AdditionalProperties = additionalProperties
 	}
 

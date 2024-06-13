@@ -51,4 +51,5 @@ var V2_PATH_ROUTE_MAP = map[string]string{
 	"/v2/api/extract/summary":                 "aca-extract-memory-summary",
 	"/v2/api/extract/kv":                      "aca-extract-memory-kv",
 	"/v2/api/character/auto/desc":             "aca-char-auto-desc",
+	"/v2/api/groupchat/nextSpeaker":           "aca-groupchat-nextspeaker",
 }

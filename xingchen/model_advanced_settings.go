@@ -19,11 +19,12 @@ var _ MappedNullable = &AdvancedSettings{}
 
 // AdvancedSettings struct for AdvancedSettings
 type AdvancedSettings struct {
-	EnableWebSearch         *bool   `json:"enableWebSearch,omitempty"`
-	SearchEnhancedKeyword   *string `json:"searchEnhancedKeyword,omitempty"`
-	EnableCharacterKbSearch *bool   `json:"enableCharacterKbSearch,omitempty"`
-	EnableLongTermMemory    *bool   `json:"enableLongTermMemory,omitempty"`
-	EnableDebug             *bool   `json:"enableDebug,omitempty"`
+	EnableWebSearch         *bool    `json:"enableWebSearch,omitempty"`
+	SearchEnhancedKeyword   *string  `json:"searchEnhancedKeyword,omitempty"`
+	EnableCharacterKbSearch *bool    `json:"enableCharacterKbSearch,omitempty"`
+	KnowledgeBases          []string `json:"KnowledgeBases,omitempty"`
+	EnableLongTermMemory    *bool    `json:"enableLongTermMemory,omitempty"`
+	EnableDebug             *bool    `json:"enableDebug,omitempty"`
 	AdditionalProperties    map[string]interface{}
 }
 
@@ -142,6 +143,33 @@ func (o *AdvancedSettings) SetEnableCharacterKbSearch(v bool) {
 	o.EnableCharacterKbSearch = &v
 }
 
+func (o *AdvancedSettings) GetKnowledgeBases() []string {
+	if o == nil || IsNil(o.KnowledgeBases) {
+		var ret []string
+		return ret
+	}
+	return o.KnowledgeBases
+}
+
+func (o *AdvancedSettings) GetKnowledgeBasesOk() ([]string, bool) {
+	if o == nil || IsNil(o.KnowledgeBases) {
+		return nil, false
+	}
+	return o.KnowledgeBases, true
+}
+
+func (o *AdvancedSettings) HasKnowledgeBases() bool {
+	if o != nil && !IsNil(o.KnowledgeBases) {
+		return true
+	}
+
+	return false
+}
+
+func (o *AdvancedSettings) SetKnowledgeBases(v []string) {
+	o.KnowledgeBases = v
+}
+
 // GetEnableLongTermMemory returns the EnableLongTermMemory field value if set, zero value otherwise.
 func (o *AdvancedSettings) GetEnableLongTermMemory() bool {
 	if o == nil || IsNil(o.EnableLongTermMemory) {
@@ -231,6 +259,9 @@ func (o AdvancedSettings) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.EnableDebug) {
 		toSerialize["enableDebug"] = o.EnableDebug
 	}
+	if !IsNil(o.KnowledgeBases) {
+		toSerialize["knowledgeBases"] = o.KnowledgeBases
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -258,6 +289,7 @@ func (o *AdvancedSettings) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "enableCharacterKbSearch")
 		delete(additionalProperties, "enableLongTermMemory")
 		delete(additionalProperties, "enableDebug")
+		delete(additionalProperties, "knowledgeBases")
 		o.AdditionalProperties = additionalProperties
 	}
 
