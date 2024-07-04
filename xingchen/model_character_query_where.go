@@ -22,7 +22,8 @@ type CharacterQueryWhere struct {
 	// 角色名称
 	CharacterName *string `json:"characterName,omitempty"`
 	// 查询范围：my:我创建的角色, public: 平台开放的角色, pre_configured: 预制角色
-	Scope                *string `json:"scope,omitempty"`
+	Scope                *string  `json:"scope,omitempty"`
+	RoleTypes            []string `json:"roleTypes,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -109,6 +110,37 @@ func (o *CharacterQueryWhere) SetScope(v string) {
 	o.Scope = &v
 }
 
+func (o *CharacterQueryWhere) GetRoleTypes() []string {
+	if o == nil || IsNil(o.RoleTypes) {
+		var ret []string
+		return ret
+	}
+	return o.RoleTypes
+}
+
+// GetRoleTypesOk returns a tuple with the RoleTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CharacterQueryWhere) GetRoleTypesOk() ([]string, bool) {
+	if o == nil || IsNil(o.RoleTypes) {
+		return nil, false
+	}
+	return o.RoleTypes, true
+}
+
+// HasRoleTypes returns a boolean if a field has been set.
+func (o *CharacterQueryWhere) HasRoleTypes() bool {
+	if o != nil && !IsNil(o.RoleTypes) {
+		return true
+	}
+
+	return false
+}
+
+// SetRoleTypes gets a reference to the given string and assigns it to the RoleTypes field.
+func (o *CharacterQueryWhere) SetRoleTypes(v []string) {
+	o.RoleTypes = v
+}
+
 func (o CharacterQueryWhere) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -124,6 +156,9 @@ func (o CharacterQueryWhere) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Scope) {
 		toSerialize["scope"] = o.Scope
+	}
+	if !(IsNil(o.RoleTypes)) {
+		toSerialize["roleTypes"] = o.RoleTypes
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -149,6 +184,7 @@ func (o *CharacterQueryWhere) UnmarshalJSON(bytes []byte) (err error) {
 	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
 		delete(additionalProperties, "characterName")
 		delete(additionalProperties, "scope")
+		delete(additionalProperties, "roleTypes")
 		o.AdditionalProperties = additionalProperties
 	}
 

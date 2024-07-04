@@ -59,6 +59,8 @@ type APIClient struct {
 	ChatExtractMessageApiSubService *ChatExtractMessageApiSubService
 
 	GroupChatApiSubService *GroupChatApiSubService
+
+	KnowledgeBaseApiSubService *KnowledgeBaseApiSubService
 }
 
 type service struct {
@@ -83,6 +85,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CommonApiSubService = (*CommonApiSubService)(&c.common)
 	c.ChatExtractMessageApiSubService = (*ChatExtractMessageApiSubService)(&c.common)
 	c.GroupChatApiSubService = (*GroupChatApiSubService)(&c.common)
+	c.KnowledgeBaseApiSubService = (*KnowledgeBaseApiSubService)(&c.common)
 
 	return c
 }

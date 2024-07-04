@@ -18,12 +18,6 @@ import (
 func Test_xingchen_CharacterApiSubService(t *testing.T) {
 
 	configuration := openapiclient.NewConfiguration()
-	configuration.Version = openapiclient.V2
-	configuration.Servers = openapiclient.ServerConfigurations{
-		{
-			URL: "https://nlp.aliyuncs.com",
-		},
-	}
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	bearer := "xxx"
@@ -205,6 +199,9 @@ func Test_xingchen_CharacterApiSubService(t *testing.T) {
 		characterQueryDTO := openapiclient.CharacterQueryDTO{
 			Where: &openapiclient.CharacterQueryWhere{
 				Scope: openapiclient.PtrString("my"),
+				RoleTypes: []string{
+					"ACG",
+				},
 			},
 			PageNum:  openapiclient.PtrInt64(1),
 			PageSize: openapiclient.PtrInt64(10),

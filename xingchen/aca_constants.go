@@ -52,4 +52,12 @@ var V2_PATH_ROUTE_MAP = map[string]string{
 	"/v2/api/extract/kv":                      "aca-extract-memory-kv",
 	"/v2/api/character/auto/desc":             "aca-char-auto-desc",
 	"/v2/api/groupchat/nextSpeaker":           "aca-groupchat-nextspeaker",
+	"/v2/api/knowledge_base/create":           "aca-kb-create",
+	"/v2/api/knowledge_base/update":           "aca-kb-update",
+	"/v2/api/knowledge_base/search":           "aca-kb-search",
+	"/v2/api/knowledge_base/delete":           "aca-kb-delete",
+	"/v2/api/knowledge_base/detail/upload":    "aca-kb-detail-upload",
+	"/v2/api/knowledge_base/detail/update":    "aca-kb-detail-update",
+	"/v2/api/knowledge_base/detail/delete":    "aca-kb-detail-delete",
+	"/v2/api/knowledge_base/detail/search":    "aca-kb-detail-search",
 }
